@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details | FITMORE</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/user/style.css">
+    <style>
+        .product-page {
+            padding: 120px 0 6rem;
+        }
+
+        .breadcrumb {
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .breadcrumb a {
+            color: var(--text-white);
+            transition: var(--transition);
+        }
+
+        .breadcrumb a:hover {
+            color: var(--accent);
+        }
+
+        /* Product Grid */
+        .product-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 6rem;
+            align-items: start;
+        }
+
+        /* Gallery */
+        .product-gallery {
+            display: grid;
+            grid-template-columns: 90px 1fr;
+            gap: 1rem;
+            position: sticky;
+            top: 100px;
+            /* Sticky on scroll */
+        }
+
+        .gallery-thumbs {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .thumb-box {
+            width: 100%;
+            aspect-ratio: 1;
+            background: #fff;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: var(--transition);
+        }
+
+        .thumb-box.active {
+            border-color: var(--accent);
+        }
+
+        .thumb-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .main-image-box {
+            background: #fff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 1;
+            overflow: hidden;
+        }
+
+        .main-image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            /* Changed to contain to show full product */
+            padding: 20px;
+        }
+
+        /* Product Info */
+        .product-info h1 {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .product-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .stars {
+            color: #FFD700;
+        }
+
+        .stock-status {
+            color: #00C851;
+            padding-left: 1rem;
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .product-price {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .product-desc {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Options */
+        .option-group {
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .option-label {
+            min-width: 80px;
+            font-size: 1.1rem;
+        }
+
+        .color-opts {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .color-radio {
+            display: none;
+        }
+
+        .color-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .color-radio:checked+.color-dot {
+            border-color: white;
+            outline: 2px solid var(--accent);
+        }
+
+        .size-opts {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .size-btn {
+            min-width: 40px;
+            height: 32px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-muted);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .size-btn.active,
+        .size-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Actions */
+        .actions-row {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .qty-wrapper {
+            display: flex;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            height: 48px;
+        }
+
+        .qty-btn {
+            width: 40px;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .qty-val {
+            width: 50px;
+            background: transparent;
+            border: none;
+            text-align: center;
+            color: white;
+            font-size: 1.1rem;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            height: 100%;
+        }
+
+        .btn-add {
+            flex: 1;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-add:hover {
+            opacity: 0.9;
+        }
+
+        /* Info Box */
+        .info-box {
+            margin-top: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-text h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .info-text p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-decoration: underline;
+        }
+
+        /* Flash Sales Section */
+        .flash-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .flash-tag {
+            color: var(--accent);
+            font-weight: 600;
+            border-left: 10px solid var(--accent);
+            padding-left: 1rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .countdown {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .cd-item {
+            text-align: center;
+        }
+
+        .cd-num {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: var(--font-display);
+        }
+
+        .cd-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .flash-slider {
+            display: flex;
+            gap: 2rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent) rgba(255, 255, 255, 0.1);
+        }
+
+        .flash-card {
+            min-width: 250px;
+            background: var(--bg-card);
+            padding: 1rem;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .flash-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: var(--accent);
+            color: white;
+            padding: 2px 8px;
+            font-size: 0.8rem;
+            border-radius: 4px;
+        }
+
+        .responsive-gallery-mobile {
+            display: none;
+        }
+
+
+        /* Responsive */
+        /* --- RESPONSIVE --- */
+        @media (max-width: 1200px) {
+            .product-container {
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .product-container {
+                gap: 3rem;
+            }
+
+            .product-gallery {
+                grid-template-columns: 80px 1fr;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .product-container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .product-gallery {
+                grid-template-columns: 1fr;
+                position: static;
+                /* Unstick on mobile/tablet if needed */
+            }
+
+            .gallery-thumbs {
+                flex-direction: row;
+                order: 2;
+                overflow-x: auto;
+                justify-content: flex-start;
+            }
+
+            .thumb-box {
+                width: 70px;
+                flex-shrink: 0;
+            }
+
+            .main-image-box {
+                order: 1;
+                height: 400px;
+                /* Limit height */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .actions-row {
+                flex-direction: column;
+            }
+
+            .btn-add {
+                width: 100%;
+                padding: 1rem;
+            }
+
+            .flash-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
+            }
+
+            .product-info h1 {
+                font-size: 2.2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-page {
+                padding-top: 100px;
+            }
+
+            .main-image-box {
+                height: 350px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .product-info h1 {
+                font-size: 1.8rem;
+            }
+
+            .product-price {
+                font-size: 1.5rem;
+            }
+
+            .thumb-box {
+                width: 60px;
+            }
+
+            .countdown {
+                gap: 1rem;
+                flex-wrap: wrap;
+                /* Wrap if needed */
+            }
+
+            .cd-num {
+                font-size: 1.2rem;
+            }
+
+            .nav-links {
+                width: 85%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header (Same as index) -->
+    <header class="header" id="header">
+        <div class="container navbar">
+            <a href="/user/index.html" class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent)">
+                    <path d="M6 10H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-3"></path>
+                    <path d="M8 10v10"></path>
+                    <path d="M16 10v10"></path>
+                </svg>
+                FITMORE
+            </a>
+
+            <nav>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="/user/index.html" class="nav-item">HOME</a></li>
+                    <li id="signupLink" class="nav-item" style="list-style: none;"><a href="/user/signup.html"
+                            class="nav-item">SIGN UP</a></li>
+                    <li><a href="/user/shop.html" class="nav-item" id="shopLink">SHOP</a></li>
+                    <li><a href="/user/about.html" class="nav-item">ABOUT</a></li>
+                    <li><a href="/user/contact.html" class="nav-item">CONTACT</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-icons">
+                <!-- Wishlist Icon (Auth Required) -->
+                <a href="/user/wishlist.html" class="icon-btn auth-required" id="wishlistBtn"
+                    style="display:none; color: white;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                        </path>
+                    </svg>
+                </a>
+
+                <div class="user-menu-wrap">
+                    <button class="icon-btn auth-required active-user" id="userIconBtn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </button>
+                    <!-- Dropdown -->
+                    <div class="account-dropdown" id="accountDropdown">
+                        <a href="/user/account.html" class="dropdown-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            Manage Account
+                        </a>
+                        <a href="/user/orders.html" class="dropdown-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line>
+                                <path
+                                    d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                                </path>
+                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                            </svg>
+                            My Orders
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item" id="dropdownLogout">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            Logout
+                        </button>
+                    </div>
+                </div>
+                <a href="/user/cart.html" class="icon-btn" style="color:white">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                    <span class="cart-count">2</span>
+                </a>
+            </div>
+
+            <div class="mobile-toggle" id="mobileToggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <section class="product-page">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="/user/index.html">Home</a> / <a href="#">Category</a> / <span style="color:var(--text-white)"
+                    id="breadName">Product Name</span>
+            </div>
+
+            <div class="product-container">
+                <!-- Gallery -->
+                <div class="product-gallery">
+                    <div class="gallery-thumbs" id="galleryThumbs">
+                        <!-- Thumbs inserted via JS -->
+                    </div>
+                    <div class="main-image-box">
+                        <img id="mainImage" src="/user/" alt="Main Product">
+                    </div>
+                </div>
+
+                <!-- Info -->
+                <div class="product-info">
+                    <h1 id="prodTitle">Product Title</h1>
+                    <div class="product-meta">
+                        <div class="stars">★★★★★ <span style="color:var(--text-muted); font-size:0.8rem">(150
+                                Reviews)</span></div>
+                        <div class="stock-status" id="stockStatus">In Stock</div>
+                    </div>
+                    <div class="product-price" id="prodPrice">$0.00</div>
+                    <p class="product-desc" id="prodDesc">
+                        Description loading...
+                    </p>
+
+                    <!-- Options -->
+                    <div class="option-group">
+                        <span class="option-label">Flavour:</span>
+                        <div class="flavour-opts" id="flavourOptions"
+                            style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <!-- Rendered via JS -->
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <span class="option-label">Weight:</span>
+                        <div class="size-opts" id="weightOptions" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <!-- Rendered via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="actions-row">
+                        <div class="qty-wrapper">
+                            <button class="qty-btn" onclick="changeQty(-1)">-</button>
+                            <input type="number" class="qty-val" value="1" id="qtyInput" readonly>
+                            <button class="qty-btn" onclick="changeQty(1)">+</button>
+                        </div>
+                        <button class="btn-add" id="addToCartBtn">Buy Now</button>
+                        <button class="icon-btn auth-required" id="prodWishlistBtn"
+                            style="border:1px solid rgba(255,255,255,0.2); border-radius:4px; height:48px; width:48px; display:flex; align-items:center; justify-content:center; cursor:pointer; color: #fff;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="qtyWarning" style="color: var(--accent); font-size: 0.85rem; margin-top: 0.5rem; margin-bottom: 0.5rem; display: none; font-weight: 500; font-family: var(--font-main);"></div>
+
+                    <!-- Info Box -->
+                    <div class="info-box">
+                        <div class="info-item">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="1" y="3" width="15" height="13"></rect>
+                                <polygon points="16 8 20 8 23 11 23 16 16 16 16 18 1 18 1 3"></polygon>
+                                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                            </svg>
+                            <div class="info-text">
+                                <h4>Free Delivery</h4>
+                                <p>Enter your postal code for delivery availability</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38" />
+                            </svg>
+                            <div class="info-text">
+                                <h4>Return Delivery</h4>
+                                <p>Free 30 Days Delivery Returns. Details</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reviews Section -->
+            <div class="product-reviews-section"
+                style="margin-top: 4rem; padding-top: 3rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2 style="font-family: var(--font-display); font-size: 2rem; text-transform: uppercase;">Customer
+                        Reviews</h2>
+                    <button class="auth-required" id="writeReviewBtn" style="background: var(--accent); color: white; border: none; font-weight: 600; border-radius: 4px; padding: 10px 24px; cursor: pointer; text-transform: uppercase; font-size: 0.9rem;" onclick="toggleReviewForm()">Write a Review</button>
+                </div>
+
+                <!-- Review Form (Hidden initially) -->
+                <div id="reviewFormContainer"
+                    style="display: none; background: rgba(255,255,255,0.02); padding: 2rem; border-radius: 8px; margin-bottom: 2rem; border: 1px solid rgba(255,255,255,0.1);">
+                    <h3 style="margin-bottom: 1rem;">Submit Your Review</h3>
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display:block; margin-bottom: 0.5rem; color: var(--text-muted);">Rating</label>
+                        <select id="reviewRatingInput"
+                            style="width: 100%; padding: 12px; background: #111; border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 4px;">
+                            <option value="5">5 Stars - Excellent</option>
+                            <option value="4">4 Stars - Very Good</option>
+                            <option value="3">3 Stars - Average</option>
+                            <option value="2">2 Stars - Poor</option>
+                            <option value="1">1 Star - Terrible</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display:block; margin-bottom: 0.5rem; color: var(--text-muted);">Comment</label>
+                        <textarea id="reviewCommentInput" rows="4"
+                            style="width: 100%; padding: 12px; background: #111; border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 4px; font-family: var(--font-main);"
+                            placeholder="What did you think about this product?"></textarea>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn-add" id="submitReviewBtn" style="flex: 1;" onclick="submitReview()">Submit
+                            Review</button>
+                        <button class="btn-cancel-item"
+                            style="padding: 0 1.5rem; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer;"
+                            onclick="toggleReviewForm()">Cancel</button>
+                    </div>
+                </div>
+
+                <!-- Reviews List Container -->
+                <div id="reviewsListContainer">
+                    <p style="color: var(--text-muted);">Loading reviews...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="f-col">
+                    <a href="/user/index.html" class="logo" style="margin-bottom:1rem">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            style="color: var(--accent)">
+                            <path d="M6 10H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-3"></path>
+                            <path d="M8 10v10"></path>
+                            <path d="M16 10v10"></path>
+                        </svg>
+                        FITMORE
+                    </a>
+                    <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.6">The premium destination for
+                        serious athletes. Quality supplements, gym gear, and expert advice.</p>
+                    <div class="f-socials">
+                        <a href="#" class="soc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                            </svg></a>
+                        <a href="#" class="soc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                            </svg></a>
+                        <a href="#" class="soc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z">
+                                </path>
+                            </svg></a>
+                    </div>
+                </div>
+
+                <div class="f-col">
+                    <h4>Support</h4>
+                    <ul class="f-links">
+                        <li><a href="/user/contact.html">Help Center</a></li>
+                        <li><a href="/user/orders.html">Track Order</a></li>
+                        <li><a href="/user/contact.html">Returns & Refunds</a></li>
+                        <li><a href="/user/contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="f-col">
+                    <h4>Shop</h4>
+                    <ul class="f-links">
+                        <li><a href="/user/shop.html?category=protein">Protein</a></li>
+                        <li><a href="/user/shop.html?category=creatine">Creatine</a></li>
+                        <li><a href="/user/shop.html?category=pre-workout">Pre-Workout</a></li>
+                        <li><a href="/user/shop.html?category=vitamins-health">Vitamins & Health</a></li>
+                    </ul>
+                </div>
+
+                <div class="f-col">
+                    <h4>Company</h4>
+                    <ul class="f-links">
+                        <li><a href="/user/about.html">About Us</a></li>
+                        <li><a href="/user/about.html">Careers</a></li>
+                        <li><a href="/user/index.html">Blog</a></li>
+                        <li><a href="/user/contact.html">Affiliate Program</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>&copy; 2026 Fitmore Inc. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- Script -->
+    <script>
+        // Mock DB
+        // Mock DB
+        //     const products = [
+        //         {
+        //             id: 'creatine-1',
+        //             name: "Creatine Monohydrate",
+        //             price: 192.00,
+        //             desc: "High quality micronized creatine powder for building muscle mass, strength and endurance. Unflavored and easy to mix.",
+        //             category: "Supplements",
+        //             stock: true,
+        //             images: [
+        //                 "images/creatine-on.jpg",
+        //                 "images/creatine-detail.png"
+        //             ],
+        //             sizes: ["100g", "250g", "500g", "1kg"]
+        //         },
+        //         {
+        //             id: 'creatine-2',
+        //             name: "Creatine Micronized",
+        //             price: 125.00,
+        //             desc: "Pure creatine monohydrate for performance.",
+        //             category: "Supplements",
+        //             stock: true,
+        //             images: ["images/creatine-micronized.jpg"],
+        //             sizes: ["250g", "500g", "1kg"]
+        //         },
+        //         {
+        //             id: 'fish-oil-1',
+        //             name: "MuscleBlaze Omega 3",
+        //             price: 125.00,
+        //             desc: "Rich source of Omega 3 fatty acids for heart and joint health.",
+        //             category: "Supplements",
+        //             stock: true,
+        //             images: ["images/fish-oil-gold.jpg"],
+        //             sizes: ["30 Caps", "60 Caps", "90 Caps"]
+        //         },
+        //         {
+        //             id: 'fish-oil-2',
+        //             name: "Fish Oil Gold",
+        //             price: 62.50,
+        //             desc: "Premium fish oil supplement.",
+        //             category: "Supplements",
+        //             stock: true,
+        //             images: ["images/fish-oil-blace.jpg"],
+        //             sizes: ["60 Caps", "90 Caps"]
+        //         },
+        //         {
+        //             id: 'bcaa-glutamine',
+        //             name: "BCAA + GLUTAMINE",
+        //             price: 25.00,
+        //             desc: "Recovery formula with BCAA and Glutamine.",
+        //             category: "Nutrition",
+        //             stock: true,
+        //             images: ["images/vitastrong.png"],
+        //             sizes: ["250g", "500g", "1kg"]
+        //         },
+        //         {
+        //             id: 'elite-protein',
+        //             name: "Elite 100% Whey",
+        //             price: 160.00,
+        //             desc: "Fast absorbing whey protein for muscle recovery.",
+        //             category: "Protein",
+        //             stock: true,
+        //             images: ["images/protein-elite.jpg"],
+        //             sizes: ["1kg", "2kg", "5kg"]
+        //         },
+        //         {
+        //             id: 'ultraboost',
+        //             name: "Ultraboost Formula",
+        //             price: 140.00,
+        //             desc: "Energy boosting pre-workout supplement.",
+        //             category: "Nutrition",
+        //             stock: true,
+        //             images: ["images/preworkout.png"],
+        //             sizes: ["30 Servings", "60 Servings"]
+        //         },
+        //         {
+        //             id: 'bcaa',
+        //             name: "BCAA Powder",
+        //             price: 110.00,
+        //             desc: "Essential amino acids for muscle maintenance.",
+        //             category: "Nutrition",
+        //             stock: true,
+        //             images: ["images/vitastrong.png"],
+        //             sizes: ["250g", "500g"]
+        //         },
+        //         {
+        //             id: 'whey-gold',
+        //             name: "Gold Standard Whey",
+        //             price: 75.00,
+        //             desc: "The world's best selling whey protein powder.",
+        //             category: "Protein",
+        //             stock: true,
+        //             images: ["images/whey-gold.jpg"],
+        //             sizes: ["1lb", "2lbs", "5lbs", "10lbs"]
+        //         }
+        //     ];
+
+        //     // Params
+        //     const params = new URLSearchParams(window.location.search);
+        //     let productId = params.get("id");
+
+        //     // Default to first product if no ID or not found
+        //     let product = products.find(p => p.id === productId);
+        //     if (!product) {
+        //         product = products[0];
+        //         productId = product.id;
+        //     }
+
+        //     // Render Product
+        //     document.getElementById('breadName').innerText = product.name;
+        //     document.getElementById('prodTitle').innerText = product.name;
+        //     document.getElementById('prodPrice').innerText = "$" + product.price.toFixed(2);
+        //     document.getElementById('prodDesc').innerText = product.desc;
+        //     document.getElementById('mainImage').src = product.images[0];
+
+        //     // Render Gallery
+        //     const galleryContainer = document.getElementById('galleryThumbs');
+        //     product.images.forEach((img, index) => {
+        //         const thumb = document.createElement('div');
+        //         thumb.className = `thumb-box ${index === 0 ? 'active' : ''}`;
+        //         thumb.innerHTML = `<img src="${img}" alt="thumb">`;
+        //         thumb.onclick = () => {
+        //             document.getElementById('mainImage').src = img;
+        //             document.querySelectorAll('.thumb-box').forEach(t => t.classList.remove('active'));
+        //             thumb.classList.add('active');
+        //         };
+        //         galleryContainer.appendChild(thumb);
+        //     });
+
+        //     // Render Sizes
+        //     const sizeContainer = document.getElementById('sizeOptions');
+        //     sizeContainer.innerHTML = ''; // Clear existing
+        //     const sizes = product.sizes || ["Standard"]; // Fallback
+
+        //     sizes.forEach((size, index) => {
+        //         const btn = document.createElement('button');
+        //         btn.className = `size-btn ${index === 0 ? 'active' : ''}`;
+        //         btn.innerText = size;
+        //         btn.onclick = () => {
+        //             document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+        //             btn.classList.add('active');
+        //         };
+        //         sizeContainer.appendChild(btn);
+        //     });
+
+        //     // Flash Sales Render
+        //     const flashSlider = document.getElementById('flashSlider');
+        //     products.forEach(p => {
+        //         const card = document.createElement('div');
+        //         card.className = "flash-card";
+        //         card.innerHTML = `
+        //             <div class="flash-badge">-40%</div>
+        //             <img src="${p.images[0]}" style="width:100%; height:150px; object-fit:contain; background:white; border-radius:4px; padding:10px; margin-bottom:1rem;">
+        //             <h4 style="font-size:0.9rem; margin-bottom:0.5rem">${p.name}</h4>
+        //             <div style="color:var(--accent); font-weight:700;">$${p.price}</div>
+        //         `;
+        //         card.onclick = () => window.location.href=`/user/product.html?id=${p.id}`;
+        //         card.style.cursor = 'pointer';
+        //         flashSlider.appendChild(card);
+        //     });
+
+        //     // Quantity
+        //     const qtyInput = document.getElementById('qtyInput');
+        //     window.changeQty = function (change) {
+        //         let val = parseInt(qtyInput.value) + change;
+        //         if (val < 1) val = 1;
+        //         qtyInput.value = val;
+        //     }
+
+        //     // Add to Cart Logic
+        //     document.getElementById('addToCartBtn').addEventListener('click', () => {
+        //         const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+        //         if (!isLoggedIn) {
+        //             // Show modal logic or redirect
+        //             // Since user requested modal OR redirect, and redirect is simpler for standalone file:
+        //             window.location.href="/user/signup.html";
+        //             return;
+        //         }
+
+
+        //         <script>
+        //     // ... (existing code) ...
+
+        //     // Add to Cart Logic
+        //     document.getElementById('addToCartBtn').addEventListener('click', () => {
+        //         const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+        //             if (!isLoggedIn) {
+        //                 // Show modal logic or redirect
+        //                 window.location.href="/user/signup.html";
+        //             return;
+        //         }
+
+        //             // Mock Add to Cart
+        //             toastAlert('Added to Cart!');
+        //             // Ideally push to localStorage.cart here
+        //             let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        //             cart.push({
+        //                 id: Math.random(), // simple mock id
+        //             name: product.name,
+        //             price: product.price,
+        //             qty: parseInt(qtyInput.value),
+        //             image: product.images[0]
+        //         });
+        //             localStorage.setItem('cart', JSON.stringify(cart));
+        //     });
+        // </script>
+
+
+
+    // </script>
+    <script src="/user/js/user-auth.js"></script>
+    <script>
+
+        /* ===========================
+           GET PRODUCT ID FROM URL
+        =========================== */
+        const params = new URLSearchParams(window.location.search);
+        let currentProductStock = 0;
+        const productId = params.get("id");
+
+        if (!productId) {
+            window.location.href="/user/shop.html";
+        }
+
+        /* ===========================
+           LOAD PRODUCT FROM BACKEND
+        =========================== */
+
+        async function loadProduct() {
+            try {
+
+                const res = await fetch(`/api/products/single/${productId}`);
+                const product = await res.json();
+
+                if (!product || product.message) {
+                    alert("Product not found");
+                    window.location.href="/user/shop.html";
+                    return;
+                }
+
+                renderProduct(product);
+
+            } catch (error) {
+                console.error("Error loading product:", error);
+            }
+        }
+
+        loadProduct();
+
+
+        /* ===========================
+           RENDER PRODUCT DATA
+        =========================== */
+
+        function renderProduct(product) {
+
+            // Breadcrumb
+            document.getElementById("breadName").innerText = product.name;
+
+            // Title
+            document.getElementById("prodTitle").innerText = product.name;
+
+            // Price
+            document.getElementById("prodPrice").innerText =
+                "₹" + product.price;
+
+            // Description
+            document.getElementById("prodDesc").innerText =
+                product.description || "No description available";
+
+            // Stock
+            currentProductStock = product.stock || 0;
+            const stockEl = document.getElementById("stockStatus");
+            const addToCartBtn = document.getElementById("addToCartBtn");
+            const qtyInputEl = document.getElementById("qtyInput");
+            
+            if (currentProductStock > 0) {
+                stockEl.innerText = currentProductStock + " in Stock";
+                stockEl.style.color = "#00C851"; 
+                if(addToCartBtn) {
+                    addToCartBtn.disabled = false;
+                    addToCartBtn.innerText = "Buy Now";
+                    addToCartBtn.style.opacity = "1";
+                    addToCartBtn.style.cursor = "pointer";
+                }
+                if(qtyInputEl) qtyInputEl.value = 1;
+            } else {
+                stockEl.innerText = "Out of Stock";
+                stockEl.style.color = "var(--accent)"; 
+                if(addToCartBtn) {
+                    addToCartBtn.disabled = true;
+                    addToCartBtn.innerText = "Out of Stock";
+                    addToCartBtn.style.opacity = "0.5";
+                    addToCartBtn.style.cursor = "not-allowed";
+                }
+                if(qtyInputEl) qtyInputEl.value = 0;
+            }
+
+            /* =====================
+                IMAGE GALLERY
+            ===================== */
+
+            const mainImage = document.getElementById("mainImage");
+            const gallery = document.getElementById("galleryThumbs");
+
+            gallery.innerHTML = "";
+
+            const images = product.images?.length
+                ? product.images
+                : [product.image];
+
+            mainImage.src = images[0];
+
+            images.forEach((img, index) => {
+
+                const thumb = document.createElement("div");
+                thumb.className = `thumb-box ${index === 0 ? "active" : ""}`;
+
+                thumb.innerHTML = `<img src="${img}" />`;
+
+                thumb.onclick = () => {
+                    mainImage.src = img;
+
+                    document
+                        .querySelectorAll(".thumb-box")
+                        .forEach(t => t.classList.remove("active"));
+
+                    thumb.classList.add("active");
+                };
+
+                gallery.appendChild(thumb);
+            });
+
+            /* =====================
+                  FLAVOUR OPTIONS
+            ===================== */
+
+            const flavourContainer = document.getElementById("flavourOptions");
+            flavourContainer.innerHTML = "";
+
+            // Fallback Flavours if none in DB
+            const flavours = product.flavours || ["Molten Chocolate Cake", "Vanilla", "Strawberry"];
+
+            flavours.forEach((flavour, index) => {
+                const btn = document.createElement("button");
+
+                // Style the button
+                btn.className = `size-btn ${index === 0 ? "active" : ""}`;
+                btn.style.padding = "0.5rem 1rem";
+                btn.style.borderRadius = "4px";
+                btn.style.border = index === 0 ? "1px solid var(--accent)" : "1px solid rgba(255,255,255,0.2)";
+                btn.style.background = index === 0 ? "rgba(229, 9, 20, 0.1)" : "transparent";
+                btn.style.color = index === 0 ? "var(--text-white)" : "var(--text-muted)";
+                btn.style.cursor = "pointer";
+                btn.style.transition = "all 0.3s ease";
+                btn.style.fontFamily = "var(--font-main)";
+
+                btn.innerText = flavour;
+
+                btn.onclick = () => {
+                    document
+                        .querySelectorAll("#flavourOptions .size-btn")
+                        .forEach(b => {
+                            b.classList.remove("active");
+                            b.style.border = "1px solid rgba(255,255,255,0.2)";
+                            b.style.background = "transparent";
+                            b.style.color = "var(--text-muted)";
+                        });
+
+                    btn.classList.add("active");
+                    btn.style.border = "1px solid var(--accent)";
+                    btn.style.background = "rgba(229, 9, 20, 0.1)";
+                    btn.style.color = "var(--text-white)";
+                };
+
+                flavourContainer.appendChild(btn);
+            });
+
+            /* =====================
+                  WEIGHT OPTIONS
+            ===================== */
+
+            const weightContainer = document.getElementById("weightOptions");
+            weightContainer.innerHTML = "";
+
+            // Fallback Weights
+            const weights = product.weights || ["1kg", "2kg", "5kg"];
+
+            weights.forEach((weight, index) => {
+
+                const btn = document.createElement("button");
+
+                btn.className = `size-btn ${index === 0 ? "active" : ""}`;
+                btn.style.padding = "5px 15px";
+                btn.style.border = "1px solid rgba(255,255,255,0.2)";
+                btn.style.borderRadius = "4px";
+                btn.style.background = "transparent";
+                btn.style.color = "var(--text-muted)";
+                btn.style.cursor = "pointer";
+                btn.style.transition = "all 0.3s ease";
+
+                if (index === 0) {
+                    btn.style.border = "1px solid var(--accent)";
+                    btn.style.color = "var(--text-white)";
+                }
+
+                btn.innerText = weight;
+
+                btn.onclick = () => {
+                    document
+                        .querySelectorAll("#weightOptions .size-btn")
+                        .forEach(b => {
+                            b.classList.remove("active");
+                            b.style.border = "1px solid rgba(255,255,255,0.2)";
+                            b.style.color = "var(--text-muted)";
+                        });
+
+                    btn.classList.add("active");
+                    btn.style.border = "1px solid var(--accent)";
+                    btn.style.color = "var(--text-white)";
+                };
+
+                weightContainer.appendChild(btn);
+            });
+
+            /* =====================
+                  WISHLIST STATE
+            ===================== */
+
+            const checkWishlistState = async () => {
+                const token = localStorage.getItem('userToken');
+                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+                if (!isLoggedIn || !token) return;
+
+                try {
+                    const res = await fetch('/api/user/wishlist', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await res.json();
+                    if (data.success && data.wishlist) {
+                        const isWishlisted = data.wishlist.some(w => w._id === product._id || w === product._id);
+                        const wishBtn = document.getElementById('prodWishlistBtn');
+                        if (wishBtn) {
+                            const svg = wishBtn.querySelector('svg');
+                            if (isWishlisted) {
+                                wishBtn.style.color = 'var(--accent)';
+                                wishBtn.style.borderColor = 'var(--accent)';
+                                svg.setAttribute('fill', 'var(--accent)');
+                            }
+                        }
+                    }
+                } catch (err) {
+                    console.error("Error fetching wishlist for state", err);
+                }
+            };
+
+            checkWishlistState();
+            loadReviews(); // Load reviews after product renders
+        }
+
+        /* ===========================
+           PRODUCT REVIEWS LOGIC
+        =========================== */
+
+        function toggleReviewForm() {
+            const container = document.getElementById('reviewFormContainer');
+            if (container.style.display === 'none') {
+                container.style.display = 'block';
+            } else {
+                container.style.display = 'none';
+            }
+        }
+
+        async function submitReview() {
+            const token = localStorage.getItem('userToken');
+            if (!token) {
+                errorAlert('Please log in to submit a review.');
+                window.location.href="/user/login.html";
+                return;
+            }
+
+            const rating = document.getElementById('reviewRatingInput').value;
+            const comment = document.getElementById('reviewCommentInput').value.trim();
+            const btn = document.getElementById('submitReviewBtn');
+
+            if (!comment) {
+                errorAlert('Please provide a comment for your review.');
+                return;
+            }
+
+            btn.innerText = 'Submitting...';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(`/api/products/${productId}/reviews`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ rating, comment })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    successAlert('Review submitted! It will appear once approved by an admin.');
+                    document.getElementById('reviewCommentInput').value = '';
+                    toggleReviewForm();
+                } else {
+                    errorAlert(data.message || 'Failed to submit review.');
+                }
+            } catch (err) {
+                console.error('Review submission error:', err);
+                errorAlert('Network error submitting review.');
+            } finally {
+                btn.innerText = 'Submit Review';
+                btn.disabled = false;
+            }
+        }
+
+        async function loadReviews() {
+            const container = document.getElementById('reviewsListContainer');
+            try {
+                const response = await fetch(`/api/products/${productId}/reviews`);
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    if (data.reviews.length === 0) {
+                        container.innerHTML = `<p style="color: var(--text-muted); padding: 2rem 0; text-align: center;">No reviews yet. Be the first to review this product!</p>`;
+                        return;
+                    }
+
+                    container.innerHTML = data.reviews.map(review => {
+                        const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+                        const date = new Date(review.createdAt).toLocaleDateString();
+                        const userName = review.user ? (review.user.firstName || review.user.name) : 'Anonymous User';
+
+                        return `
+                            <div style="padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <div style="font-weight: 600;">${userName}</div>
+                                    <div style="color: var(--text-muted); font-size: 0.85rem;">${date}</div>
+                                </div>
+                                <div style="color: #fbbf24; margin-bottom: 1rem; font-size: 1.1rem; letter-spacing: 2px;">
+                                    ${stars}
+                                </div>
+                                <div style="color: #eee; line-height: 1.6; font-size: 0.95rem;">
+                                    ${review.comment}
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    container.innerHTML = `<p style="color: var(--text-muted);">Failed to load reviews.</p>`;
+                }
+            } catch (err) {
+                console.error('Error loading reviews:', err);
+                container.innerHTML = `<p style="color: var(--text-muted);">Error loading reviews.</p>`;
+            }
+        }
+
+
+        /* ===========================
+           QUANTITY BUTTONS
+        =========================== */
+
+        const qtyInput = document.getElementById("qtyInput");
+
+        window.changeQty = function (change) {
+            if (currentProductStock <= 0) return;
+            
+            let currentVal = parseInt(qtyInput.value) || 1;
+            let val = currentVal + change;
+            
+            if (val < 1) val = 1;
+            
+            if (val > currentProductStock) {
+                val = currentProductStock;
+                const warnDiv = document.getElementById("qtyWarning");
+                if (warnDiv) {
+                    warnDiv.innerText = "Maximum limit of " + currentProductStock + " items reached.";
+                    warnDiv.style.display = "block";
+                    setTimeout(() => warnDiv.style.display = "none", 3000);
+                }
+            }
+            
+            qtyInput.value = val;
+        };
+        
+        if (qtyInput) {
+            qtyInput.addEventListener('change', (e) => {
+                let val = parseInt(e.target.value) || 1;
+                if (currentProductStock <= 0) {
+                    val = 0;
+                } else if (val < 1) {
+                    val = 1;
+                } else if (val > currentProductStock) {
+                    val = currentProductStock;
+                    const warnDiv = document.getElementById("qtyWarning");
+                    if (warnDiv) {
+                        warnDiv.innerText = "Maximum limit of " + currentProductStock + " items reached.";
+                        warnDiv.style.display = "block";
+                        setTimeout(() => warnDiv.style.display = "none", 3000);
+                    }
+                }
+                e.target.value = val;
+            });
+        }
+
+
+        /* ===========================
+           BUY NOW → SAVE TO DB
+        =========================== */
+        document
+            .getElementById("addToCartBtn")
+            .addEventListener("click", async () => {
+
+                const token = localStorage.getItem("userToken");
+
+                if (!token) {
+                    window.location.href="/user/signup.html";
+                    return;
+                }
+
+                try {
+
+                    const res = await fetch(
+                        "/api/cart/add",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${token}`
+                            },
+                            body: JSON.stringify({
+                                productId: productId,
+                                qty: parseInt(qtyInput.value)
+                            })
+                        }
+                    );
+
+                    const data = await res.json();
+                    console.log("Cart Updated:", data);
+
+                    window.location.href="/user/cart.html";
+
+                } catch (err) {
+                    console.error("Cart Error:", err);
+                }
+            });
+
+        /* ===========================
+           TOGGLE SINGLE PRODUCT WISHLIST
+        =========================== */
+        const prodWishBtn = document.getElementById('prodWishlistBtn');
+        if (prodWishBtn) {
+            prodWishBtn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+
+                const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+                if (!loggedIn) {
+                    alert('Please log in to add to wishlist');
+                    window.location.href="/user/login.html";
+                    return;
+                }
+
+                try {
+                    const token = localStorage.getItem('userToken');
+                    const res = await fetch('/api/user/wishlist/toggle', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ productId: productId })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        const svg = prodWishBtn.querySelector('svg');
+                        if (data.added) {
+                            prodWishBtn.style.color = 'var(--accent)';
+                            prodWishBtn.style.borderColor = 'var(--accent)';
+                            svg.setAttribute('fill', 'var(--accent)');
+                        } else {
+                            prodWishBtn.style.color = '#fff';
+                            prodWishBtn.style.borderColor = 'rgba(255,255,255,0.2)';
+                            svg.setAttribute('fill', 'none');
+                        }
+                    }
+                } catch (err) {
+                    console.error('Error toggling wishlist', err);
+                }
+            });
+        }
+
+        /* ===========================
+           NAVBAR AUTH LOGIC
+        =========================== */
+
+        const userIconBtn = document.getElementById('userIconBtn');
+        const accountDropdown = document.getElementById('accountDropdown');
+        const dropdownLogout = document.getElementById('dropdownLogout');
+        const mobileToggleBtn = document.getElementById('mobileToggle');
+        const mobileNavLinks = document.getElementById('navLinks');
+        const signupLink = document.getElementById('signupLink');
+        const shopLink = document.getElementById('shopLink');
+        const wishlistBtn = document.getElementById('wishlistBtn');
+
+        const isLoggedIn =
+            localStorage.getItem('isLoggedIn') === 'true';
+
+        if (isLoggedIn) {
+            if (signupLink) signupLink.style.display = 'none';
+            if (shopLink) shopLink.style.display = 'block';
+            if (wishlistBtn) wishlistBtn.style.display = 'flex';
+        }
+
+        if (userIconBtn) {
+            userIconBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                accountDropdown.classList.toggle('open');
+            });
+        }
+
+        document.addEventListener('click', (e) => {
+            if (
+                userIconBtn &&
+                !userIconBtn.contains(e.target) &&
+                !accountDropdown.contains(e.target)
+            ) {
+                accountDropdown.classList.remove('open');
+            }
+        });
+
+        if (dropdownLogout) {
+            dropdownLogout?.addEventListener('click', () => {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userToken');
+            window.location.href="/user/index.html";
+        });
+        }
+
+        if (mobileToggleBtn) {
+            mobileToggleBtn.addEventListener('click', () => {
+                mobileNavLinks.classList.toggle('active');
+            });
+        }
+
+    </script>
+    <!-- SweetAlert2 & Custom Alerts -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/user/../js/alert.js"></script>
+
+    <script>
+        /* =====================================
+           GLOBAL AUTH LOGIC (Hide Nav Items)
+        =====================================*/
+        document.addEventListener("DOMContentLoaded", () => {
+            const token = localStorage.getItem("userToken");
+            const signupLink = document.getElementById("signupLink");
+            
+            if (token) {
+                if (signupLink) signupLink.style.display = "none";
+                
+                // Show protected icons (like profile or wishlist) if they have a 'auth-required' class that defaults to hidden
+                document.querySelectorAll('.auth-required').forEach(el => {
+                    el.style.display = 'inline-block'; // Or whatever their natural display is
+                });
+            } else {
+                if (signupLink) signupLink.style.display = "block";
+                
+                // Hide protected icons if not logged in
+                document.querySelectorAll('.auth-required').forEach(el => {
+                    if (el.id !== 'userIconBtn') { // Prevent hiding main user icon if it handles login redirect
+                        el.style.display = 'none';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

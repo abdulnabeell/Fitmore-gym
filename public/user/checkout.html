@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | FITMORE</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/user/style.css">
+    <style>
+        .checkout-section {
+            padding: 120px 0 6rem;
+        }
+
+        .breadcrumb {
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .breadcrumb a {
+            color: var(--text-white);
+            transition: var(--transition);
+        }
+
+        .breadcrumb a:hover {
+            color: var(--accent);
+        }
+
+        .page-title {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            text-transform: uppercase;
+        }
+
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        /* Billing Form */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .form-label span {
+            color: var(--accent);
+        }
+
+        .form-control {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 4px;
+            color: white;
+            font-family: var(--font-main);
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+            cursor: pointer;
+        }
+
+        .checkbox-group input {
+            accent-color: var(--accent);
+            width: 18px;
+            height: 18px;
+        }
+
+        .checkbox-label {
+            font-size: 0.9rem;
+            color: var(--text-white);
+        }
+
+        /* Order Summary */
+        .order-summary {
+            background: transparent;
+            padding: 2rem 0;
+            /* No background/padding as per design image, just clean list */
+        }
+
+        .summary-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .summary-info img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            background: white;
+            padding: 2px;
+            border-radius: 4px;
+        }
+
+        .s-rows {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .s-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            color: var(--text-white);
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .s-row:last-child {
+            border-bottom: none;
+        }
+
+        .payment-methods {
+            margin-top: 2rem;
+        }
+
+        .payment-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+
+        .payment-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .payment-option input {
+            accent-color: var(--accent);
+            width: 18px;
+            height: 18px;
+        }
+
+        .bank-icons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .coupon-row {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .coupon-input {
+            flex: 1;
+            background: transparent;
+            border: 1px solid white;
+            padding: 12px;
+            border-radius: 4px;
+            color: white;
+        }
+
+        .btn-apply {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0 2rem;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-place {
+            width: 100%;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: var(--transition);
+        }
+
+        .btn-place:hover {
+            background: var(--accent-hover);
+        }
+
+        /* Address Cards Custom Styling */
+        .address-selection-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .address-card-label {
+            display: block;
+            cursor: pointer;
+        }
+
+        .address-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            transition: var(--transition);
+        }
+
+        /* Hide default radio */
+        .address-card-label input[type="radio"] {
+            display: none;
+        }
+
+        /* Custom Radio Button Circle */
+        .custom-radio {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+            transition: var(--transition);
+        }
+
+        .custom-radio::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: 0;
+            transform: scale(0);
+            transition: var(--transition);
+        }
+
+        /* Active Card Style */
+        .address-card-label input[type="radio"]:checked+.address-card {
+            border-color: var(--accent);
+            background: rgba(229, 9, 20, 0.05);
+            /* very faint red tint */
+        }
+
+        .address-card-label input[type="radio"]:checked+.address-card .custom-radio {
+            border-color: var(--accent);
+        }
+
+        .address-card-label input[type="radio"]:checked+.address-card .custom-radio::after {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .card-details {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-name {
+            font-weight: 600;
+            color: var(--text-white);
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .card-badge {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-phone {
+            color: var(--text-white);
+            font-size: 0.95rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .card-line {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .no-address-msg {
+            background: var(--bg-card);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-radius: 8px;
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+        }
+
+        .no-address-msg p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .btn-outline {
+            display: inline-block;
+            border: 1px solid var(--accent);
+            color: var(--text-white);
+            background: transparent;
+            padding: 10px 24px;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .btn-outline:hover {
+            background: var(--accent);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            color: var(--text-white);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .checkout-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .order-summary {
+                background: var(--bg-card);
+                padding: 2rem;
+                border-radius: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header (Reused) -->
+    <header class="header" id="header">
+        <div class="container navbar">
+            <a href="/user/index.html" class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent)">
+                    <path d="M6 10H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-3"></path>
+                    <path d="M8 10v10"></path>
+                    <path d="M16 10v10"></path>
+                </svg>
+                FITMORE
+            </a>
+
+            <nav>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="/user/index.html" class="nav-item">HOME</a></li>
+                    <li><a href="/user/contact.html" class="nav-item">CONTACT</a></li>
+                    <li><a href="/user/about.html" class="nav-item">ABOUT</a></li>
+                    <li id="signupLink" class="nav-item" style="list-style: none;"><a href="/user/signup.html" class="nav-item">SIGN UP</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-icons">
+                <button class="icon-btn auth-required active-user">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </button>
+            </div>
+            <div class="mobile-toggle" id="mobileToggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <section class="checkout-section">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="/user/index.html">Account</a> / <a href="#">My Account</a> / <a href="#">Product</a> / <a
+                    href="/user/cart.html">View Cart</a> / <span style="color:var(--text-white)">CheckOut</span>
+            </div>
+
+            <h1 class="page-title">Billing Details</h1>
+
+            <div class="checkout-grid">
+                <!-- Left: Shipping Method Picker & Payment -->
+                <div class="checkout-left-column">
+                    <h3 style="color: var(--text-white); margin-bottom: 1.5rem; font-size: 1.3rem;">Shipping Address</h3>
+                    <form id="shippingAddressForm">
+                        <div id="addressSelectionContainer" class="address-selection-container">
+                            <!-- Injected by fetch logic -->
+                            <p style="color:var(--text-muted)">Loading addresses...</p>
+                        </div>
+                        <button type="button" id="openAddAddressBtn" class="btn-outline"
+                            style="width: 100%; margin-top: 1.5rem; text-align: center; border-style: dashed;">+ Add New
+                            Address</button>
+                    </form>
+
+                    <h3 style="color: var(--text-white); margin-top: 3.5rem; margin-bottom: 1.5rem; font-size: 1.3rem;">Payment Method</h3>
+                    <div class="payment-methods" style="margin-top: 0;">
+                        <label class="payment-option">
+                            <div class="payment-left">
+                                <input type="radio" name="payment" value="wallet" id="paymentWallet">
+                                <span>Wallet (Bal: <span id="walletBalanceDisplay"
+                                        style="color:var(--accent)">$0.00</span>)</span>
+                            </div>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path>
+                                <path d="M4 6v12c0 1.1.9 2 2 2h14v-4"></path>
+                                <path d="M18 12a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4v-8h-4z"></path>
+                            </svg>
+                        </label>
+
+                        <label class="payment-option">
+                            <div class="payment-left">
+                                <input type="radio" name="payment" value="razorpay">
+                                <span>Online Payment (Razorpay)</span>
+                            </div>
+                        </label>
+
+                        <label class="payment-option">
+                            <div class="payment-left">
+                                <input type="radio" name="payment" value="cod" checked>
+                                <span>Cash on delivery</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div id="paymentDetails" style="margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--accent);">
+                        Cash on delivery selected.
+                    </div>
+
+                    <div class="form-group" style="margin-top: 2rem; margin-bottom: 0;">
+                        <label class="form-label">Order Notes (Optional)</label>
+                        <textarea id="orderNotes" class="form-control" rows="3"
+                            placeholder="Notes about your order, e.g. special notes for delivery."
+                            style="resize:none;"></textarea>
+                    </div>
+                </div>
+
+                <!-- Right: Summary -->
+                <div class="order-summary" style="background: var(--bg-card); padding: 2rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); position: sticky; top: 100px; height: fit-content; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+                    <h3 style="color: var(--text-white); margin-bottom: 1.5rem; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px;">Order Summary</h3>
+                    
+                    <div id="orderItems">
+                        <!-- Rendered via JS -->
+                    </div>
+
+                    <!-- Available Coupons List -->
+                    <div id="availableCouponsContainer" style="margin-top: 1.5rem; margin-bottom: 1rem;">
+                        <div onclick="const list = document.getElementById('availableCouponsList'); const icon = document.getElementById('couponToggleIcon'); if(list.style.display === 'none'){ list.style.display = 'flex'; icon.style.transform = 'rotate(180deg)'; } else { list.style.display = 'none'; icon.style.transform = 'rotate(0deg)'; }" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: rgba(255,255,255,0.02); padding: 12px 15px; border-radius: 6px; border: 1px dashed rgba(255,255,255,0.2); transition: background 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='rgba(255,255,255,0.02)'">
+                            <h4 style="font-size: 0.85rem; margin: 0; color: var(--text-white); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                                    <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                                </svg>
+                                View Available Coupons
+                            </h4>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.3s;" id="couponToggleIcon">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        <div id="availableCouponsList" style="display: none; flex-direction: column; gap: 0.5rem; margin-top: 1rem; max-height: 250px; overflow-y: auto; padding-right: 5px;">
+                            <span style="font-size: 0.85rem; color: var(--text-muted);">Loading coupons...</span>
+                        </div>
+                    </div>
+
+                    <div class="coupon-row" style="margin-top: 0; margin-bottom: 1rem;">
+                        <input type="text" id="couponCodeInput" class="coupon-input" placeholder="Coupon Code">
+                        <button class="btn-apply" id="applyCouponBtn">Apply</button>
+                    </div>
+                    <div id="couponMessage" style="margin-top: 5px; margin-bottom: 10px; font-size: 0.9rem;"></div>
+                    <div id="discountRowContainer" style="margin-top: 10px;"></div>
+
+                    <div class="s-rows" style="margin-top: 1.5rem;">
+                        <div class="s-row">
+                            <span>Subtotal:</span>
+                            <span id="subtotalDisplay">$0</span>
+                        </div>
+                        <div class="s-row">
+                            <span>Shipping:</span>
+                            <span>Free</span>
+                        </div>
+                        <div class="s-row" style="border-bottom: none; padding-bottom: 0;">
+                            <span style="font-weight: 600; font-size: 1.1rem;">Total:</span>
+                            <span id="totalDisplay" style="color:var(--accent); font-weight: 700; font-size: 1.2rem;">$0</span>
+                        </div>
+                    </div>
+
+                    <div id="addressPreview"
+                        style="margin-top: 1.5rem; padding: 1rem; border: 1px dashed rgba(255,255,255,0.2); border-radius: 8px; display: none;">
+                        <h4 style="font-size: 0.85rem; margin-bottom: 0.5rem; color: var(--text-white); text-transform: uppercase;">Deliver To:</h4>
+                        <div id="addressPreviewText"
+                            style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.5;"></div>
+                    </div>
+
+                    <button class="btn-place" id="placeOrderBtn" style="margin-top: 2rem; font-size: 1.05rem; padding: 18px; text-transform: uppercase; letter-spacing: 1px;">Place Order</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add Address Modal -->
+    <div id="addAddressModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 1.5rem; color: var(--accent); font-size: 1.5rem;">Add New Address</h3>
+            <form id="addAddressForm">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" id="addrName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone Number</label>
+                    <input type="text" id="addrPhone" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">PIN Code</label>
+                    <input type="text" id="addrPin" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Full Address</label>
+                    <textarea id="addrText" class="form-control" required rows="3" style="resize:none;"></textarea>
+                </div>
+                <div style="display:flex; justify-content: flex-end; gap: 1rem; margin-top: 1rem;">
+                    <button type="button" id="closeModalBtn"
+                        style="padding:10px 24px; background:none; border:none; cursor:pointer; color: var(--text-white); font-weight: 500;">Cancel</button>
+                    <button type="submit" class="btn-outline">Save Address</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="f-col">
+                    <a href="/user/index.html" class="logo" style="margin-bottom:1rem">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            style="color: var(--accent)">
+                            <path d="M6 10H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-3"></path>
+                            <path d="M8 10v10"></path>
+                            <path d="M16 10v10"></path>
+                        </svg>
+                        FITMORE
+                    </a>
+                    <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.6">The premium destination for
+                        serious athletes. Quality supplements, gym gear, and expert advice.</p>
+                    <div class="f-socials">
+                        <a href="#" class="soc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                            </svg></a>
+                        <a href="#" class="soc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                            </svg></a>
+                        <a href="#" class="soc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z">
+                                </path>
+                            </svg></a>
+                    </div>
+                </div>
+
+                <div class="f-col">
+                    <h4>Support</h4>
+                    <ul class="f-links">
+                        <li><a href="/user/contact.html">Help Center</a></li>
+                        <li><a href="/user/orders.html">Track Order</a></li>
+                        <li><a href="/user/contact.html">Returns & Refunds</a></li>
+                        <li><a href="/user/contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="f-col">
+                    <h4>Shop</h4>
+                    <ul class="f-links">
+                        <li><a href="/user/shop.html?category=protein">Protein</a></li>
+                        <li><a href="/user/shop.html?category=creatine">Creatine</a></li>
+                        <li><a href="/user/shop.html?category=pre-workout">Pre-Workout</a></li>
+                        <li><a href="/user/shop.html?category=vitamins-health">Vitamins & Health</a></li>
+                    </ul>
+                </div>
+
+                <div class="f-col">
+                    <h4>Company</h4>
+                    <ul class="f-links">
+                        <li><a href="/user/about.html">About Us</a></li>
+                        <li><a href="/user/about.html">Careers</a></li>
+                        <li><a href="/user/index.html">Blog</a></li>
+                        <li><a href="/user/contact.html">Affiliate Program</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>&copy; 2026 Fitmore Inc. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- SweetAlert2 & Custom Alerts -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/user/../js/alert.js"></script>
+<script src="/user/js/user-auth.js"></script>
+    <script>
+
+        /* ===========================
+           AUTH CHECK
+        =========================== */
+
+        const token = localStorage.getItem("userToken");
+
+        if (!token) {
+            window.location.href="/user/signup.html";
+        }
+
+
+        /* ===========================
+           MOBILE MENU
+        =========================== */
+
+        const mobileToggleBtn =
+            document.getElementById("mobileToggle");
+
+        const mobileNavLinks =
+            document.getElementById("navLinks");
+
+        mobileToggleBtn?.addEventListener("click", () => {
+            mobileNavLinks.classList.toggle("active");
+        });
+
+
+        /* ===========================
+           GLOBAL CART
+        =========================== */
+
+        let cart = [];
+
+        const orderItemsContainer =
+            document.getElementById("orderItems");
+
+        const subtotalDisplay =
+            document.getElementById("subtotalDisplay");
+
+        const totalDisplay =
+            document.getElementById("totalDisplay");
+
+
+        /* ===========================
+           LOAD CART FROM DATABASE
+        =========================== */
+
+        async function loadCart() {
+            orderItemsContainer.innerHTML = "<p style='color: var(--text-muted); text-align: center; padding: 1rem;'>Loading your cart...</p>";
+            try {
+
+                const res = await fetch(
+                    "/api/cart",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
+
+                const data = await res.json();
+
+                cart = data.items || [];
+
+                if (cart.length === 0) {
+                    window.location.href="/user/cart.html";
+                    return;
+                }
+                console.log(data);
+                renderSummary();
+
+            } catch (err) {
+                console.error("Cart Load Error:", err);
+                orderItemsContainer.innerHTML = "<p style='color: #ef4444; text-align: center;'>Failed to load cart.</p>";
+            }
+        }
+
+
+        /* ===========================
+           RENDER ORDER SUMMARY
+        =========================== */
+
+        function renderSummary() {
+
+            let total = 0;
+
+            orderItemsContainer.innerHTML = "";
+
+            if (!cart.length) {
+                orderItemsContainer.innerHTML =
+                    "<p>Your cart is empty.</p>";
+                return;
+            }
+
+            cart.forEach(item => {
+
+                const subtotal = item.price * item.qty;
+                total += subtotal;
+
+                const imgSrc =
+                    item.image || "images/download.jpg";
+
+                const div = document.createElement("div");
+                div.className = "summary-item";
+
+                div.innerHTML = `
+            <div class="summary-info">
+                <img src="${imgSrc}">
+                <span>${item.name} &times;${item.qty}</span>
+            </div>
+            <span>₹${subtotal.toFixed(2)}</span>
+        `;
+
+                orderItemsContainer.appendChild(div);
+            });
+
+            const appliedCoupon = JSON.parse(sessionStorage.getItem('appliedCoupon'));
+            let discount = 0;
+
+            if (appliedCoupon) {
+                if (appliedCoupon.minPurchase && total < appliedCoupon.minPurchase) {
+                    sessionStorage.removeItem('appliedCoupon');
+                    const msgEl = document.getElementById('couponMessage');
+                    if (msgEl) {
+                        msgEl.innerText = `Coupon removed: Minimum purchase of ₹${appliedCoupon.minPurchase} required.`;
+                        msgEl.style.color = '#ef4444';
+                    }
+                } else {
+                    if (appliedCoupon.type === 'percentage') {
+                        discount = (total * appliedCoupon.value) / 100;
+                    } else {
+                        discount = appliedCoupon.value;
+                        if (discount > total) discount = total;
+                    }
+                }
+            }
+
+            const finalTotal = total - discount;
+
+            subtotalDisplay.innerText = `₹${total.toFixed(2)}`;
+
+            const discountRowContainer = document.getElementById('discountRowContainer');
+            if (discount > 0) {
+                discountRowContainer.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; margin-bottom:1rem; color:var(--accent); font-size:0.95rem;">
+                        <span>Discount (${appliedCoupon.code}) <span style="cursor:pointer; font-size:0.8rem; text-decoration:underline;" onclick="removeCoupon()">[Remove]</span></span>
+                        <span>-₹${discount.toFixed(2)}</span>
+                    </div>
+                `;
+            } else {
+                discountRowContainer.innerHTML = '';
+            }
+
+            totalDisplay.innerText = `₹${finalTotal.toFixed(2)}`;
+        }
+
+        /* ===========================
+           COUPON LOGIC
+        =========================== */
+
+        const applyCouponBtn = document.getElementById('applyCouponBtn');
+        const couponCodeInput = document.getElementById('couponCodeInput');
+        const couponMessage = document.getElementById('couponMessage');
+
+        if (applyCouponBtn) {
+            applyCouponBtn.addEventListener('click', async () => {
+                const code = couponCodeInput.value.trim();
+                if (!code) return;
+
+                couponMessage.innerText = 'Validating...';
+                couponMessage.style.color = 'var(--text-muted)';
+
+                const token = localStorage.getItem('userToken');
+                if (!token) {
+                    window.location.href="/user/login.html";
+                    return;
+                }
+
+                let currentTotal = 0;
+                cart.forEach(item => { currentTotal += item.price * item.qty; });
+
+                try {
+                    const res = await fetch('/api/user/coupons/validate', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ code: code, cartTotal: currentTotal })
+                    });
+
+                    const data = await res.json();
+
+                    if (data.success) {
+                        couponMessage.innerText = data.message;
+                        couponMessage.style.color = '#10b981';
+
+                        sessionStorage.setItem('appliedCoupon', JSON.stringify({
+                            code: data.coupon.code,
+                            type: data.coupon.type,
+                            value: data.coupon.value,
+                            minPurchase: data.coupon.minPurchase || 0
+                        }));
+
+                        renderSummary();
+                    } else {
+                        couponMessage.innerText = data.message;
+                        couponMessage.style.color = '#ef4444';
+                        sessionStorage.removeItem('appliedCoupon');
+                        renderSummary();
+                    }
+
+                } catch (err) {
+                    console.error('Coupon validation error:', err);
+                    couponMessage.innerText = 'Error validating coupon';
+                    couponMessage.style.color = '#ef4444';
+                }
+            });
+        }
+
+        window.removeCoupon = function () {
+            sessionStorage.removeItem('appliedCoupon');
+            if (couponMessage) couponMessage.innerText = '';
+            if (couponCodeInput) couponCodeInput.value = '';
+            renderSummary();
+        };
+
+        /* ===========================
+           FETCH AVAILABLE COUPONS
+        =========================== */
+        async function loadAvailableCoupons() {
+            try {
+                const res = await fetch('/api/user/coupons/available');
+                const data = await res.json();
+                
+                const container = document.getElementById('availableCouponsList');
+                if (!container) return;
+                
+                if (data.success && data.coupons && data.coupons.length > 0) {
+                    container.innerHTML = data.coupons.map(c => `
+                        <div style="border: 1px dashed rgba(255,255,255,0.2); padding: 12px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; background: rgba(0, 0, 0, 0.2); transition: border-color 0.3s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)'">
+                            <div style="display: flex; flex-direction: column;">
+                                <span style="font-weight: 700; color: var(--text-white); font-family: var(--font-display); letter-spacing: 1px; font-size: 1.1rem;">${c.code}</span>
+                                <span style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">
+                                    ${c.type === 'percentage' ? c.value + '% off' : '₹' + c.value + ' off'} 
+                                    ${c.minPurchase ? 'on orders above ₹' + c.minPurchase : ''}
+                                </span>
+                            </div>
+                            <button type="button" onclick="document.getElementById('couponCodeInput').value='${c.code}';" style="background: rgba(229, 9, 20, 0.1); color: var(--accent); border: 1px solid var(--accent); padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; text-transform: uppercase; font-weight: 600; transition: all 0.2s;" onmouseover="this.style.background='var(--accent)'; this.style.color='white';" onmouseout="this.style.background='rgba(229, 9, 20, 0.1)'; this.style.color='var(--accent)';">Tap to Use</button>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p style="font-size: 0.85rem; color: var(--text-muted);">No discount codes available at the moment.</p>';
+                }
+            } catch (err) {
+                console.error("Error loading coupons:", err);
+            }
+        }
+        
+        loadAvailableCoupons();
+
+
+        /* ===========================
+           WALLET INIT
+        =========================== */
+
+        let walletBalance = 0;
+
+        async function loadWallet() {
+            try {
+                const res = await fetch("/api/user/wallet", {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    walletBalance = data.walletBalance;
+                    const walletDisplay = document.getElementById("walletBalanceDisplay");
+                    if (walletDisplay) {
+                        walletDisplay.innerText = `₹${walletBalance.toFixed(2)}`;
+                    }
+                }
+            } catch (err) {
+                console.error("Wallet Load Error:", err);
+            }
+        }
+
+        /* ===========================
+           ADDRESS BOOK INIT
+        =========================== */
+
+        const addressContainer = document.getElementById("addressSelectionContainer");
+
+        async function loadAddresses() {
+            try {
+                const res = await fetch("/api/user/addresses", {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const data = await res.json();
+
+                if (data.success && data.addresses.length > 0) {
+                    renderAddresses(data.addresses);
+                } else {
+                    // Empty State
+                    addressContainer.innerHTML = `
+                        <div class="no-address-msg">
+                            <p>You haven't saved any addresses yet.</p>
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                console.error("Address Load Error:", err);
+                addressContainer.innerHTML = `<p style="color:var(--accent)">Failed to load addresses.</p>`;
+            }
+        }
+
+        function renderAddresses(addresses) {
+            let html = "";
+            addresses.forEach((addr, index) => {
+                // Pre-check the first address natively
+                const isChecked = index === 0 ? "checked" : "";
+                const idStr = `addr_${addr._id}`;
+
+                // Serialize the address data to inject directly into the radio value
+                const serializedData = encodeURIComponent(JSON.stringify(addr));
+
+                html += `
+                    <label class="address-card-label" for="${idStr}">
+                        <input type="radio" name="selectedShipping" id="${idStr}" value="${serializedData}" ${isChecked}>
+                        <div class="address-card">
+                            <div class="custom-radio"></div>
+                            <div class="card-details">
+                                <div class="card-header">
+                                    <h4 class="card-name">${addr.name}</h4>
+                                    ${index === 0 ? '<span class="card-badge">Default</span>' : ''}
+                                </div>
+                                <div class="card-phone">Phone: ${addr.ph} (PIN: ${addr.pin})</div>
+                                <div class="card-line">${addr.addressLine}</div>
+                            </div>
+                        </div>
+                    </label>
+                `;
+            });
+
+            addressContainer.innerHTML = html;
+
+            // Attach listener for address preview
+            document.querySelectorAll('input[name="selectedShipping"]').forEach(radio => {
+                radio.addEventListener('change', updateAddressPreview);
+            });
+            updateAddressPreview();
+        }
+
+        function updateAddressPreview() {
+            const selectedRadio = document.querySelector('input[name="selectedShipping"]:checked');
+            const previewContainer = document.getElementById('addressPreview');
+            const previewText = document.getElementById('addressPreviewText');
+
+            if (selectedRadio && previewContainer && previewText) {
+                const addr = JSON.parse(decodeURIComponent(selectedRadio.value));
+                previewText.innerHTML = `<b>${addr.name}</b><br>${addr.ph}<br>${addr.addressLine}, PIN: ${addr.pin}`;
+                previewContainer.style.display = 'block';
+            } else if (previewContainer) {
+                previewContainer.style.display = 'none';
+            }
+        }
+
+        /* ===========================
+           ADDRESS MODAL LOGIC
+        =========================== */
+
+        const modal = document.getElementById('addAddressModal');
+        const openModalBtn = document.getElementById('openAddAddressBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const form = document.getElementById('addAddressForm');
+
+        if (openModalBtn) {
+            openModalBtn.addEventListener('click', () => {
+                form.reset();
+                modal.style.display = 'flex';
+            });
+        }
+
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+                form.reset();
+            });
+        }
+
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+                form.reset();
+            }
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const payload = {
+                name: document.getElementById('addrName').value,
+                ph: document.getElementById('addrPhone').value,
+                pin: document.getElementById('addrPin').value,
+                addressLine: document.getElementById('addrText').value
+            };
+
+            try {
+                const res = await fetch('/api/user/address', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    modal.style.display = 'none';
+                    form.reset();
+                    if (typeof Swal !== 'undefined') successAlert('Address Added!');
+                    else alert('Address Added!');
+
+                    if (data.addresses) {
+                        renderAddresses(data.addresses);
+                    } else {
+                        loadAddresses();
+                    }
+                } else {
+                    if (typeof Swal !== 'undefined') errorAlert(data.message || 'Failed to save address');
+                    else alert(data.message || 'Failed to save address');
+                }
+            } catch (err) {
+                console.error(err);
+                if (typeof Swal !== 'undefined') errorAlert("Server error");
+                else alert("Server error");
+            }
+        });
+
+        /* ===========================
+           PAYMENT METHOD SWITCH
+        =========================== */
+
+        const paymentRadios = document.querySelectorAll('input[name="payment"]');
+        const paymentDetails = document.getElementById('paymentDetails');
+
+        paymentRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                if (!paymentDetails) return;
+                if (radio.value === 'razorpay') {
+                    paymentDetails.innerHTML = 'Secure online payment via Razorpay. You will be redirected after clicking Place Order.';
+                } else if (radio.value === 'wallet') {
+                    paymentDetails.innerHTML = 'Wallet selected. Balance will be verified on checkout.';
+                } else {
+                    paymentDetails.innerHTML = 'Cash on delivery selected.';
+                }
+            });
+        });
+
+        /* ===========================
+           PLACE ORDER
+        =========================== */
+
+        document
+            .getElementById("placeOrderBtn")
+            .addEventListener("click", async (e) => {
+
+                const btn = e.target;
+
+                // CART VALIDATION
+                if (!cart || cart.length === 0) {
+                    if (typeof Swal !== 'undefined') errorAlert('Your cart is empty.');
+                    else alert('Your cart is empty.');
+                    return;
+                }
+
+                btn.disabled = true;
+                const originalText = btn.innerText;
+                btn.innerText = "Processing...";
+
+                // 1. Verify Address
+                const selectedRadio = document.querySelector('input[name="selectedShipping"]:checked');
+                if (!selectedRadio) {
+                    btn.disabled = false;
+                    btn.innerText = originalText;
+                    if (typeof Swal !== 'undefined') errorAlert('Please select or add a shipping address.');
+                    else alert('Please select or add a shipping address.');
+                    return;
+                }
+
+                // Decode the attached address context
+                const parsedAddress = JSON.parse(decodeURIComponent(selectedRadio.value));
+
+                // Construct backend shippingAddress expectations
+                const shippingPayload = {
+                    address: parsedAddress.addressLine,
+                    city: "Default City", // Not explicitly tracked in Address schema yet
+                    postalCode: parsedAddress.pin,
+                    country: "Default Country" // Same here
+                };
+
+                // 2. Extract Payment and Cart info
+                const payment =
+                    document.querySelector(
+                        'input[name="payment"]:checked'
+                    ).value;
+
+                let total = 0;
+
+                cart.forEach(
+                    item => total += item.price * item.qty
+                );
+
+                const appliedCoupon = JSON.parse(sessionStorage.getItem('appliedCoupon'));
+                let discount = 0;
+                if (appliedCoupon) {
+                    if (appliedCoupon.type === 'percentage') {
+                        discount = (total * appliedCoupon.value) / 100;
+                    } else {
+                        discount = appliedCoupon.value;
+                        if (discount > total) discount = total;
+                    }
+                }
+                const finalTotal = total - discount;
+
+                /* ===== WALLET PAYMENT ===== */
+
+                if (payment === "wallet") {
+
+                    if (walletBalance < finalTotal) {
+                        btn.disabled = false;
+                        btn.innerText = originalText;
+                        errorAlert(
+                            `Insufficient Wallet Balance (₹${walletBalance.toFixed(2)})`
+                        );
+                        return;
+                    }
+
+                    // We do not locally deduct and save to localStorage here. 
+                    // The backend `POST /api/orders` will handle the actual secure deduction.
+                }
+
+                const notes = document.getElementById('orderNotes')?.value || '';
+
+                try {
+
+                    /* ===== RAZORPAY PAYMENT LOGIC ===== */
+
+                    if (payment === "razorpay") {
+                        // 1. Create native Razorpay order
+                        const rpayRes = await fetch("/api/payment/create-order", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${token}`
+                            },
+                            body: JSON.stringify({ amount: finalTotal })
+                        });
+
+                        const rpayData = await rpayRes.json();
+                        if (!rpayRes.ok || !rpayData.success) {
+                            throw new Error(rpayData.message || 'Razorpay order creation failed');
+                        }
+
+                        // 2. Open Razorpay Widget
+                        const options = {
+                            key: "YOUR_RAZORPAY_KEY_ID_HERE", // Replaced by backend safely or user configs
+                            amount: rpayData.order.amount,
+                            currency: rpayData.order.currency,
+                            name: "FITMORE",
+                            description: "Order Checkout",
+                            order_id: rpayData.order.id,
+                            handler: async function (response) {
+                                try {
+                                    // 3. Verify Payment
+                                    const verifyRes = await fetch("/api/payment/verify-signature", {
+                                        method: "POST",
+                                        headers: {
+                                            "Content-Type": "application/json",
+                                            Authorization: `Bearer ${token}`
+                                        },
+                                        body: JSON.stringify({
+                                            razorpay_order_id: response.razorpay_order_id,
+                                            razorpay_payment_id: response.razorpay_payment_id,
+                                            razorpay_signature: response.razorpay_signature
+                                        })
+                                    });
+
+                                    const verifyData = await verifyRes.json();
+                                    if (verifyRes.ok && verifyData.success) {
+                                        // 4. Save Actual Database Order
+                                        await finalizeOrder();
+                                    } else {
+                                        errorAlert('Payment verification failed.');
+                                        btn.disabled = false;
+                                        btn.innerText = originalText;
+                                    }
+                                } catch (e) {
+                                    console.error("Verification Error", e);
+                                    errorAlert('Critical error verifying payment.');
+                                    btn.disabled = false;
+                                    btn.innerText = originalText;
+                                }
+                            },
+                            theme: { color: "#3b82f6" },
+                            modal: {
+                                ondismiss: function () {
+                                    btn.disabled = false;
+                                    btn.innerText = originalText;
+                                }
+                            }
+                        };
+
+                        // We need the dynamically assigned key. We shouldn't hardcode it on frontend.
+                        // For a real production app, we would supply the key from backend config route.
+                        // Here, we'll try to retrieve the env variable or just trigger Razorpay. 
+                        // The server must provide this key. For now, assuming standard flow.
+
+                        // Fetching public key from server
+                        const keyRes = await fetch("/api/payment/config");
+                        const keyData = await keyRes.json();
+                        options.key = keyData.key || "YOUR_RAZORPAY_KEY_ID_HERE";
+
+                        const rzp1 = new Razorpay(options);
+                        rzp1.on('payment.failed', function (response) {
+                            errorAlert(response.error.description);
+                            btn.disabled = false;
+                            btn.innerText = originalText;
+                        });
+                        rzp1.open();
+
+                    } else {
+                        // Regular flow for COD / Wallet
+                        await finalizeOrder();
+                    }
+
+                    /* ===== FINALIZE MONGODB ORDER ===== */
+                    async function finalizeOrder() {
+                        const response = await fetch(
+                            "/api/orders",
+                            {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    Authorization: `Bearer ${token}`
+                                },
+                                body: JSON.stringify({
+                                    items: cart,
+                                    total: finalTotal,
+                                    paymentMethod: payment,
+                                    shippingAddress: shippingPayload,
+                                    notes: notes
+                                })
+                            }
+                        );
+
+                        const data = await response.json();
+
+                        if (!response.ok || data.success === false) {
+                            btn.disabled = false;
+                            btn.innerText = originalText;
+                            if (typeof Swal !== 'undefined') errorAlert(data.message || 'Order Failed');
+                            else alert(data.message || 'Order Failed');
+                            return;
+                        }
+
+                        await fetch(
+                            "/api/cart/clear",
+                            {
+                                method: "DELETE",
+                                headers: {
+                                    Authorization: `Bearer ${token}`
+                                }
+                            }
+                        );
+
+                        successAlert(
+                            "Order Placed Successfully!"
+                        ).then(() => {
+                            window.location.href="/user/orders.html";
+                        });
+                    }
+
+                } catch (err) {
+
+                    console.error(err);
+
+                    btn.disabled = false;
+                    btn.innerText = originalText;
+                    errorAlert("Order Failed. Please try again.");
+
+                }
+
+            });
+
+
+        /* ===========================
+           INIT
+        =========================== */
+
+        loadCart();
+        loadAddresses();
+        loadWallet();
+
+    </script>
+
+    <script>
+        /* =====================================
+           GLOBAL AUTH LOGIC (Hide Nav Items)
+        =====================================*/
+        document.addEventListener("DOMContentLoaded", () => {
+            const token = localStorage.getItem("userToken");
+            const signupLink = document.getElementById("signupLink");
+            
+            if (token) {
+                if (signupLink) signupLink.style.display = "none";
+                
+                // Show protected icons (like profile or wishlist) if they have a 'auth-required' class that defaults to hidden
+                document.querySelectorAll('.auth-required').forEach(el => {
+                    el.style.display = 'inline-block'; // Or whatever their natural display is
+                });
+            } else {
+                if (signupLink) signupLink.style.display = "block";
+                
+                // Hide protected icons if not logged in
+                document.querySelectorAll('.auth-required').forEach(el => {
+                    if (el.id !== 'userIconBtn') { // Prevent hiding main user icon if it handles login redirect
+                        el.style.display = 'none';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

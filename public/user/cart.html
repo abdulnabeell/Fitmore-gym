@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart | FITMORE</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/user/style.css">
+    <style>
+        .cart-section {
+            padding: 120px 0 6rem;
+            min-height: 80vh;
+        }
+
+        .breadcrumb {
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .breadcrumb a {
+            color: var(--text-white);
+            transition: var(--transition);
+        }
+
+        .breadcrumb a:hover {
+            color: var(--accent);
+        }
+
+        .cart-title {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            text-transform: uppercase;
+        }
+
+        .cart-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 4rem;
+        }
+
+        /* Cart Items */
+        .cart-header {
+            display: grid;
+            grid-template-columns: 3fr 1fr 1fr 0.5fr;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border-radius: 4px;
+            margin-bottom: 2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: 3fr 1fr 1fr 0.5fr;
+            align-items: center;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+        }
+
+        .cart-item:hover {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .item-info img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            background: #fff;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        .item-name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* Quantity Control */
+        .qty-control {
+            display: flex;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            width: fit-content;
+        }
+
+        .qty-btn {
+            background: none;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition);
+        }
+
+        .qty-btn:hover {
+            color: var(--accent);
+        }
+
+        .qty-input {
+            background: transparent;
+            border: none;
+            color: white;
+            width: 40px;
+            text-align: center;
+            font-family: var(--font-main);
+            appearance: none;
+            -moz-appearance: textfield;
+        }
+
+        .qty-input::-webkit-outer-spin-button,
+        .qty-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .remove-btn {
+            color: #ff4444;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            justify-content: center;
+        }
+
+        .remove-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Cart Actions */
+        .cart-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 2rem;
+        }
+
+        /* Totals Box */
+        .cart-totals {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            height: fit-content;
+        }
+
+        .totals-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+        }
+
+        .totals-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.95rem;
+        }
+
+        .totals-row.final {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .coupon-section {
+            margin-top: 3rem;
+        }
+
+        .coupon-box {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .coupon-input {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .cart-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cart-header {
+                display: none;
+            }
+
+            .cart-item {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                text-align: center;
+                position: relative;
+            }
+
+            .item-info {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .remove-btn {
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+            }
+
+            .qty-control {
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container navbar">
+            <a href="/user/index.html" class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent)">
+                    <path d="M6 10H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-3"></path>
+                    <path d="M8 10v10"></path>
+                    <path d="M16 10v10"></path>
+                </svg>
+                FITMORE
+            </a>
+
+            <nav>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="/user/index.html" class="nav-item">HOME</a></li>
+                    <li id="signupLink" class="nav-item" style="list-style: none;"><a href="/user/signup.html" class="nav-item">SIGN UP</a></li>
+                    <li><a href="/user/shop.html" class="nav-item" id="shopLink">SHOP</a></li>
+                    <li><a href="/user/about.html" class="nav-item">ABOUT</a></li>
+                    <li><a href="/user/contact.html" class="nav-item">CONTACT</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-icons">
+                <!-- Wishlist Icon (Auth Required) -->
+                <a href="/user/wishlist.html" class="icon-btn auth-required" id="wishlistBtn"
+                    style="display:none; color: white;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                        </path>
+                    </svg>
+                </a>
+
+                <div class="user-menu-wrap">
+                    <button class="icon-btn auth-required active-user" id="userIconBtn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </button>
+                    <!-- Dropdown -->
+                    <div class="account-dropdown" id="accountDropdown">
+                        <a href="/user/account.html" class="dropdown-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            Manage Account
+                        </a>
+                        <a href="/user/orders.html" class="dropdown-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line>
+                                <path
+                                    d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                                </path>
+                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                            </svg>
+                            My Orders
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item" id="dropdownLogout">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            Logout
+                        </button>
+                    </div>
+                </div>
+                <a href="/user/cart.html" class="icon-btn" style="color: var(--accent);">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                    <span class="cart-count">2</span>
+                </a>
+            </div>
+
+            <div class="mobile-toggle" id="mobileToggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <section class="cart-section">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="/user/index.html">Home</a> / <span style="color: var(--text-white);">Cart</span>
+            </div>
+            <h1 class="cart-title">Cart</h1>
+
+            <div class="cart-grid">
+                <!-- Cart Lists -->
+                <div class="cart-left">
+                    <div class="cart-header">
+                        <div>Product</div>
+                        <div>Price</div>
+                        <div>Quantity</div>
+                        <div style="text-align: right;">Subtotal</div>
+                    </div>
+
+                    <div id="cartItems">
+                        <!-- Items rendered via JS -->
+                    </div>
+
+                    <div class="cart-actions">
+                        <a href="/user/shop.html" class="btn-outline">Return To Shop</a>
+                        <button class="btn-outline" onclick="renderCart()">Update Cart</button>
+                    </div>
+
+                    <div class="coupon-section">
+                        <p style="margin-bottom:0.5rem">Coupon Code</p>
+                        <div class="coupon-box">
+                            <input type="text" id="couponCodeInput" class="coupon-input" placeholder="Enter code">
+                            <button class="btn" id="applyCouponBtn">Apply Coupon</button>
+                        </div>
+                        <div id="couponMessage" style="margin-top: 10px; font-size: 0.9rem;"></div>
+                        
+                        <!-- Available Coupons List -->
+                        <div id="availableCouponsContainer" style="margin-top: 1.5rem;">
+                            <h4 style="font-size: 0.9rem; margin-bottom: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Available Coupons</h4>
+                            <div id="availableCouponsList" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <span style="font-size: 0.85rem; color: var(--text-muted);">Loading coupons...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cart Totals -->
+                <div class="cart-right">
+                    <div class="cart-totals">
+                        <h3 class="totals-title">Cart Total</h3>
+                        <div class="totals-row">
+                            <span>Subtotal:</span>
+                            <span id="subtotalDisplay">$0.00</span>
+                        </div>
+                        <div class="totals-row">
+                            <span>Shipping:</span>
+                            <span style="color: #00C851;">Free</span>
+                        </div>
+                        <div id="discountRowContainer"></div>
+                        <div class="totals-row final">
+                            <span>Total:</span>
+                            <span id="totalDisplay">$0.00</span>
+                        </div>
+                        <button class="btn" style="width: 100%; margin-top: 2rem;"
+                            onclick="window.location.href='/user/checkout.html'">Process to checkout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="f-col">
+                    <a href="/user/index.html" class="logo" style="margin-bottom:1rem">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            style="color: var(--accent)">
+                            <path d="M6 10H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-3"></path>
+                            <path d="M8 10v10"></path>
+                            <path d="M16 10v10"></path>
+                        </svg>
+                        FITMORE
+                    </a>
+                    <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.6">The premium destination for
+                        serious athletes. Quality supplements, gym gear, and expert advice.</p>
+                    <div class="f-socials">
+                        <a href="#" class="soc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                            </svg></a>
+                        <a href="#" class="soc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                            </svg></a>
+                        <a href="#" class="soc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z">
+                                </path>
+                            </svg></a>
+                    </div>
+                </div>
+
+                <div class="f-col">
+                    <h4>Support</h4>
+                    <ul class="f-links">
+                        <li><a href="/user/contact.html">Help Center</a></li>
+                        <li><a href="/user/orders.html">Track Order</a></li>
+                        <li><a href="/user/contact.html">Returns & Refunds</a></li>
+                        <li><a href="/user/contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="f-col">
+                    <h4>Shop</h4>
+                    <ul class="f-links">
+                        <li><a href="/user/shop.html?category=protein">Protein</a></li>
+                        <li><a href="/user/shop.html?category=creatine">Creatine</a></li>
+                        <li><a href="/user/shop.html?category=pre-workout">Pre-Workout</a></li>
+                        <li><a href="/user/shop.html?category=vitamins-health">Vitamins & Health</a></li>
+                    </ul>
+                </div>
+
+                <div class="f-col">
+                    <h4>Company</h4>
+                    <ul class="f-links">
+                        <li><a href="/user/about.html">About Us</a></li>
+                        <li><a href="/user/about.html">Careers</a></li>
+                        <li><a href="/user/index.html">Blog</a></li>
+                        <li><a href="/user/contact.html">Affiliate Program</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>&copy; 2026 Fitmore Inc. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- Script -->
+     <script src="/user/js/user-auth.js"></script>
+    <script>
+
+        /* ===============================
+           AUTH CHECK
+        ================================ */
+
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.href="/user/signup.html";
+        }
+
+
+        /* ===============================
+           NAVBAR LOGIC
+        ================================ */
+
+        const userIconBtn = document.getElementById('userIconBtn');
+        const accountDropdown = document.getElementById('accountDropdown');
+        const dropdownLogout = document.getElementById('dropdownLogout');
+        const mobileToggleBtn = document.getElementById('mobileToggle');
+        const mobileNavLinks = document.getElementById('navLinks');
+        const signupLink = document.getElementById('signupLink');
+        const shopLink = document.getElementById('shopLink');
+        const wishlistBtn = document.getElementById('wishlistBtn');
+
+        if (signupLink) signupLink.style.display = 'none';
+        if (shopLink) shopLink.style.display = 'block';
+        if (wishlistBtn) wishlistBtn.style.display = 'flex';
+
+        userIconBtn?.addEventListener('click', e => {
+            e.stopPropagation();
+            accountDropdown.classList.toggle('open');
+        });
+
+        document.addEventListener('click', e => {
+            if (!userIconBtn.contains(e.target) &&
+                !accountDropdown.contains(e.target)) {
+                accountDropdown.classList.remove('open');
+            }
+        });
+
+        dropdownLogout?.addEventListener('click', () => {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userToken');
+            window.location.href="/user/index.html";
+        });
+
+        mobileToggleBtn?.addEventListener('click', () => {
+            mobileNavLinks.classList.toggle('active');
+        });
+
+
+        /* ===============================
+           CART LOGIC (DATABASE)
+        ================================ */
+
+        let cart = [];
+
+        const cartItemsContainer = document.getElementById('cartItems');
+        const subtotalDisplay = document.getElementById('subtotalDisplay');
+        const totalDisplay = document.getElementById('totalDisplay');
+
+
+        /* ===============================
+           LOAD CART FROM BACKEND
+        ================================ */
+
+        async function loadCart() {
+
+            const token = localStorage.getItem("userToken");
+
+            if (!token) {
+                window.location.href="/user/signup.html";
+                return;
+            }
+
+            try {
+
+                const res = await fetch("/api/cart", {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                const data = await res.json();
+
+                cart = data.items || [];
+
+                renderCart();
+
+            } catch (err) {
+                console.error("Cart load error:", err);
+            }
+        }
+
+
+        /* ===============================
+           RENDER CART ITEMS
+        ================================ */
+
+        function renderCart() {
+
+            cartItemsContainer.innerHTML = "";
+
+            let total = 0;
+
+            cart.forEach(item => {
+
+                const subtotal = item.price * item.qty;
+                total += subtotal;
+
+                const imgSrc = item.image
+                    ? encodeURI(item.image)
+                    : "images/download.jpg";
+
+                const row = document.createElement("div");
+                row.className = "cart-item";
+
+                row.innerHTML = `
+            <div class="item-info">
+                <img src="${imgSrc}">
+                <div class="item-name">${item.name}</div>
+            </div>
+
+            <div>$${item.price}</div>
+
+            <div>
+                <div class="qty-control">
+                    <button class="qty-btn"
+                        onclick="updateQty('${item.product}',-1)">-</button>
+
+                    <input class="qty-input" value="${item.qty}" readonly>
+
+                    <button class="qty-btn"
+                        onclick="updateQty('${item.product}',1)">+</button>
+                </div>
+            </div>
+
+            <div style="text-align:right;display:flex;gap:1rem;justify-content:flex-end;">
+                <span>$${subtotal}</span>
+
+                <div class="remove-btn"
+                    onclick="removeItem('${item.product}')">
+                    ❌
+                </div>
+            </div>
+        `;
+
+                cartItemsContainer.appendChild(row);
+            });
+
+            const appliedCoupon = JSON.parse(sessionStorage.getItem('appliedCoupon'));
+            let discount = 0;
+
+            if (appliedCoupon) {
+                // Double check minimum purchase
+                if (appliedCoupon.minPurchase && total < appliedCoupon.minPurchase) {
+                    sessionStorage.removeItem('appliedCoupon');
+                    const msgEl = document.getElementById('couponMessage');
+                    if (msgEl) {
+                        msgEl.innerText = `Coupon removed: Minimum purchase of ₹${appliedCoupon.minPurchase} required.`;
+                        msgEl.style.color = '#ef4444';
+                    }
+                } else {
+                    if (appliedCoupon.type === 'percentage') {
+                        discount = (total * appliedCoupon.value) / 100;
+                    } else {
+                        discount = appliedCoupon.value;
+                        if (discount > total) discount = total;
+                    }
+                }
+            }
+
+            const finalTotal = total - discount;
+
+            subtotalDisplay.innerText = `₹${total.toFixed(2)}`;
+
+            const discountRowContainer = document.getElementById('discountRowContainer');
+            if (discount > 0) {
+                discountRowContainer.innerHTML = `
+            <div class="totals-row" style="color: var(--accent);">
+                <span>Discount (${appliedCoupon.code}) <span style="cursor:pointer; font-size:0.8rem; text-decoration:underline;" onclick="removeCoupon()">[Remove]</span>:</span>
+                <span>-₹${discount.toFixed(2)}</span>
+            </div>
+        `;
+            } else {
+                discountRowContainer.innerHTML = '';
+            }
+
+            totalDisplay.innerText = `₹${finalTotal.toFixed(2)}`;
+        }
+
+        /* ===============================
+           COUPON LOGIC
+        ================================ */
+        const applyCouponBtn = document.getElementById('applyCouponBtn');
+        const couponCodeInput = document.getElementById('couponCodeInput');
+        const couponMessage = document.getElementById('couponMessage');
+
+        if (applyCouponBtn) {
+            applyCouponBtn.addEventListener('click', async () => {
+                const code = couponCodeInput.value.trim();
+                if (!code) return;
+
+                couponMessage.innerText = 'Validating...';
+                couponMessage.style.color = 'var(--text-muted)';
+
+                const token = localStorage.getItem('userToken');
+                if (!token) {
+                    window.location.href="/user/login.html";
+                    return;
+                }
+
+                // Calculate current total
+                let currentTotal = 0;
+                cart.forEach(item => { currentTotal += item.price * item.qty; });
+
+                try {
+                    const res = await fetch('/api/user/coupons/validate', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ code: code, cartTotal: currentTotal })
+                    });
+
+                    const data = await res.json();
+
+                    if (data.success) {
+                        couponMessage.innerText = data.message;
+                        couponMessage.style.color = '#10b981';
+
+                        // Save complete coupon object for strict re-calculation locally
+                        sessionStorage.setItem('appliedCoupon', JSON.stringify({
+                            code: data.coupon.code,
+                            type: data.coupon.type,
+                            value: data.coupon.value,
+                            minPurchase: data.coupon.minPurchase || 0
+                        }));
+
+                        renderCart(); // Re-render to show discount
+                    } else {
+                        couponMessage.innerText = data.message;
+                        couponMessage.style.color = '#ef4444';
+                        sessionStorage.removeItem('appliedCoupon');
+                        renderCart();
+                    }
+
+                } catch (err) {
+                    console.error('Coupon validation error:', err);
+                    couponMessage.innerText = 'Error validating coupon';
+                    couponMessage.style.color = '#ef4444';
+                }
+            });
+
+        }
+
+        window.removeCoupon = function () {
+            sessionStorage.removeItem('appliedCoupon');
+            if (couponMessage) couponMessage.innerText = '';
+            if (couponCodeInput) couponCodeInput.value = '';
+            renderCart();
+        };
+
+        /* ===============================
+           FETCH AVAILABLE COUPONS
+        ================================ */
+        async function loadAvailableCoupons() {
+            try {
+                const res = await fetch('/api/user/coupons/available');
+                const data = await res.json();
+                
+                const container = document.getElementById('availableCouponsList');
+                if (!container) return;
+                
+                if (data.success && data.coupons && data.coupons.length > 0) {
+                    container.innerHTML = data.coupons.map(c => `
+                        <div style="border: 1px dashed rgba(255,255,255,0.2); padding: 12px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; background: rgba(0, 0, 0, 0.2); transition: border-color 0.3s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)'">
+                            <div style="display: flex; flex-direction: column;">
+                                <span style="font-weight: 700; color: var(--text-white); font-family: var(--font-display); letter-spacing: 1px; font-size: 1.1rem;">${c.code}</span>
+                                <span style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">
+                                    ${c.type === 'percentage' ? c.value + '% off' : '₹' + c.value + ' off'} 
+                                    ${c.minPurchase ? 'on orders above ₹' + c.minPurchase : ''}
+                                </span>
+                            </div>
+                            <button onclick="document.getElementById('couponCodeInput').value='${c.code}';" style="background: rgba(229, 9, 20, 0.1); color: var(--accent); border: 1px solid var(--accent); padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; text-transform: uppercase; font-weight: 600; transition: all 0.2s;" onmouseover="this.style.background='var(--accent)'; this.style.color='white';" onmouseout="this.style.background='rgba(229, 9, 20, 0.1)'; this.style.color='var(--accent)';">Tap to Use</button>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p style="font-size: 0.85rem; color: var(--text-muted);">No discount codes available at the moment.</p>';
+                }
+            } catch (err) {
+                console.error("Error loading coupons:", err);
+            }
+        }
+        
+        loadAvailableCoupons();
+
+
+        /* ===============================
+           UPDATE QUANTITY
+        ================================ */
+
+        window.updateQty = async function (productId, change) {
+
+            const token = localStorage.getItem("userToken");
+
+            await fetch("/api/cart/update", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({ productId, change })
+            });
+
+            loadCart();
+        };
+
+
+        /* ===============================
+           REMOVE ITEM
+        ================================ */
+
+        window.removeItem = async function (productId) {
+
+            const token = localStorage.getItem("userToken");
+
+            await fetch("/api/cart/remove", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({ productId })
+            });
+
+            loadCart();
+        };
+
+
+        /* ===============================
+           INIT CART
+        ================================ */
+
+        loadCart();
+
+    </script>
+
+    <script>
+        /* =====================================
+           GLOBAL AUTH LOGIC (Hide Nav Items)
+        =====================================*/
+        document.addEventListener("DOMContentLoaded", () => {
+            const token = localStorage.getItem("userToken");
+            const signupLink = document.getElementById("signupLink");
+            
+            if (token) {
+                if (signupLink) signupLink.style.display = "none";
+                
+                // Show protected icons (like profile or wishlist) if they have a 'auth-required' class that defaults to hidden
+                document.querySelectorAll('.auth-required').forEach(el => {
+                    el.style.display = 'inline-block'; // Or whatever their natural display is
+                });
+            } else {
+                if (signupLink) signupLink.style.display = "block";
+                
+                // Hide protected icons if not logged in
+                document.querySelectorAll('.auth-required').forEach(el => {
+                    if (el.id !== 'userIconBtn') { // Prevent hiding main user icon if it handles login redirect
+                        el.style.display = 'none';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
