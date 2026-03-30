@@ -21,7 +21,7 @@ exports.cancelOrder = async (req, res) => {
             });
         }
 
-        const { itemIds } = req.body;
+        const { itemIds } = req.body || {};
 
         if (itemIds && Array.isArray(itemIds) && itemIds.length > 0) {
             // Partial cancellation logic
@@ -59,6 +59,6 @@ exports.cancelOrder = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({ success: false, message: "Server error during cancellation" });
+        res.status(500).json({ success: false, message: "Server error during cancellation", error: error.message, stack: error.stack });
     }
 };
