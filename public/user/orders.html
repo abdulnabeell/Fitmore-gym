@@ -400,6 +400,41 @@
                 </div>
             </div>
 
+            <!-- Cancel Modal -->
+            <div class="modal-overlay" id="cancelModal">
+                <div class="modal">
+                    <h3 class="modal-title">Cancel Items</h3>
+                    <p style="margin-bottom: 1rem; color: #666; font-size: 0.9rem;">Select the items you wish to cancel.</p>
+                    <div class="modal-body" id="cancelModalBody" style="max-height: 300px; overflow-y: auto; margin-bottom: 1rem;">
+                        <!-- Checkboxes go here -->
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-action" style="background:#eee; color:#333;"
+                            onclick="closeCancelModal()">Go Back</button>
+                        <button class="btn-action btn-cancel" onclick="submitCancel()">Confirm Cancellation</button>
+                    </div>
+                </div>
+            </div>
+
+
+        </div> <!-- End container -->
+    </section> 
+            <!-- Cancel Modal -->
+            <div class="modal-overlay" id="cancelModal">
+                <div class="modal">
+                    <h3 class="modal-title">Cancel Items</h3>
+                    <p style="margin-bottom: 1rem; color: #666; font-size: 0.9rem;">Select the items you wish to cancel.</p>
+                    <div class="modal-body" id="cancelModalBody" style="max-height: 300px; overflow-y: auto; margin-bottom: 1rem;">
+                        <!-- Checkboxes go here -->
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-action" style="background:#eee; color:#333;"
+                            onclick="closeCancelModal()">Go Back</button>
+                        <button class="btn-action btn-cancel" onclick="submitCancel()">Confirm Cancellation</button>
+                    </div>
+                </div>
+            </div>
+
         </div> <!-- End container -->
     </section> <!-- End account-section -->
 
@@ -544,6 +579,7 @@
 
                 const orders = await res.json();
 
+                window.userOrders = orders;
                 const container =
                     document.getElementById("ordersContainer");
 
@@ -564,7 +600,7 @@
 
                     let actionButtonHTML = '';
                     if (order.status === "PLACED" || order.status === "CONFIRMED") {
-                        actionButtonHTML = `<button class="btn-action btn-cancel" onclick="cancelOrder('${order._id}')">Cancel Order</button>`;
+                        actionButtonHTML = `<button class="btn-action btn-cancel" onclick="openCancelModal('${order._id}')">Cancel Order</button>`;
                     } else if (order.status === "SHIPPED" || order.status === "OUT_FOR_DELIVERY") {
                         actionButtonHTML = `<button class="btn-action" style="background:#FFA500;color:black" onclick="trackOrder('${order._id}')">Track Order</button>`;
                     } else if (order.status === "DELIVERED") {

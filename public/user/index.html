@@ -1137,7 +1137,6 @@
             }
         }
 
-
         @media (max-width: 480px) {
             .stats-grid {
                 grid-template-columns: 1fr;
@@ -1321,8 +1320,7 @@
             </nav>
 
             <div class="nav-icons">
-                
-                
+
                 <div class="search-container" style="position: relative; display: flex; align-items: center;">
                     <button class="icon-btn desktop-only" id="globalSearchBtn" onclick="toggleGlobalSearch(event)">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -1338,7 +1336,6 @@
                         <div id="suggestionsContent" style="max-height: 400px; overflow-y: auto;"></div>
                     </div>
                 </div>
-
 
                 <!-- Wishlist Icon -->
                 <a href="/user/wishlist.html" class="icon-btn auth-required" id="wishlistBtn"
@@ -1606,9 +1603,6 @@
         </div>
     </section>
 
-
-
-    
     <!-- Brand Marquee Section -->
     <style>
         .brand-marquee-section {
@@ -1768,7 +1762,6 @@
         </div>
     </footer>
 
-
     <!-- Scripts -->
 
     <!-- Auth Modal -->
@@ -1784,26 +1777,10 @@
         </div>
     </div>
 
-    <!-- Cart Success Modal -->
-    <div class="auth-modal-overlay" id="cartSuccessModal">
-        <div class="auth-modal">
-            <h2 id="cartModalTitle">Success</h2>
-            <p id="cartModalMessage">Item added to cart successfully.</p>
-            <div class="auth-btns">
-                <a href="/user/cart.html" class="btn">View Cart</a>
-                <button class="btn-outline" id="closeCartModalBtn" style="width: 100%; margin-top: 10px;">Continue Shopping</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Scripts -->
      <script src="/user/js/user-auth.js"></script>
     <script>
         //        
-
-
-
-
 
         /* ===============================
            AUTH CHECK
@@ -2332,6 +2309,7 @@
             }
         });
     </script>
+<script src="/user/js/cart-modal.js"></script>
 </body>
 
 </html>
