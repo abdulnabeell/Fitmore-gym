@@ -1784,6 +1784,18 @@
         </div>
     </div>
 
+    <!-- Cart Success Modal -->
+    <div class="auth-modal-overlay" id="cartSuccessModal">
+        <div class="auth-modal">
+            <h2 id="cartModalTitle">Success</h2>
+            <p id="cartModalMessage">Item added to cart successfully.</p>
+            <div class="auth-btns">
+                <a href="/user/cart.html" class="btn">View Cart</a>
+                <button class="btn-outline" id="closeCartModalBtn" style="width: 100%; margin-top: 10px;">Continue Shopping</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
      <script src="/user/js/user-auth.js"></script>
     <script>
@@ -1874,6 +1886,22 @@
 
         authModal?.addEventListener('click', e => {
             if (e.target === authModal) closeModal();
+        });
+
+        /* ===============================
+           CART MODAL
+        ================================*/
+        const cartSuccessModal = document.getElementById('cartSuccessModal');
+        const closeCartModalBtn = document.getElementById('closeCartModalBtn');
+
+        function closeCartModal() {
+            if(cartSuccessModal) cartSuccessModal.classList.remove('active');
+        }
+
+        closeCartModalBtn?.addEventListener('click', closeCartModal);
+
+        cartSuccessModal?.addEventListener('click', e => {
+            if (e.target === cartSuccessModal) closeCartModal();
         });
 
         /* ===============================
@@ -2019,13 +2047,47 @@
                         /* ===== ADD TO CART ===== */
                         const addBtn = card.querySelector(".add-btn");
 
-                        addBtn.addEventListener("click", (e) => {
-
+                        addBtn.addEventListener("click", async (e) => {
                             e.stopPropagation();
 
                             if (!checkAuth(e)) return;
 
-                            alert(`Added ${product.name} to cart`);
+                            try {
+                                const token = localStorage.getItem('userToken');
+                                const res = await fetch('/api/cart/add', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${token}`
+                                    },
+                                    body: JSON.stringify({ productId: product._id, quantity: 1 })
+                                });
+                                const data = await res.json();
+                                
+                                const modalTitle = document.getElementById('cartModalTitle');
+                                const modalMessage = document.getElementById('cartModalMessage');
+                                
+                                if (data.success || res.status === 200) {
+                                    modalTitle.textContent = "Added to Cart!";
+                                    modalTitle.style.color = "var(--text-white)";
+                                    modalMessage.textContent = `${product.name} has been added to your cart.`;
+                                    
+                                    const cartCounts = document.querySelectorAll('.cart-count');
+                                    cartCounts.forEach(el => {
+                                      let count = parseInt(el.textContent) || 0;
+                                      el.textContent = count + 1;
+                                    });
+                                } else {
+                                    modalTitle.textContent = "Error";
+                                    modalTitle.style.color = "var(--accent)";
+                                    modalMessage.textContent = data.message || "Failed to add product to cart.";
+                                }
+                                
+                                const cartModal = document.getElementById('cartSuccessModal');
+                                if (cartModal) cartModal.classList.add('active');
+                            } catch(err) {
+                                console.error('Error adding to cart', err);
+                            }
                         });
 
                         productContainer.appendChild(card);

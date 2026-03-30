@@ -1434,9 +1434,21 @@
                     );
 
                     const data = await res.json();
-                    console.log("Cart Updated:", data);
-
-                    window.location.href="/user/cart.html";
+                    
+                    const modalTitle = document.getElementById('cartModalTitle');
+                    const modalMessage = document.getElementById('cartModalMessage');
+                    if(modalTitle) modalTitle.textContent = "Added to Cart!";
+                    if(modalTitle) modalTitle.style.color = "var(--text-white)";
+                    if(modalMessage) modalMessage.textContent = "Product has been added to your cart.";
+                    
+                    const cartModal = document.getElementById('cartSuccessModal');
+                    if (cartModal) cartModal.classList.add('active');
+                    
+                    const cartCounts = document.querySelectorAll('.cart-count');
+                    cartCounts.forEach(el => {
+                      let count = parseInt(el.textContent) || 0;
+                      el.textContent = count + Math.max(1, parseInt(qtyInput.value) || 1);
+                    });
 
                 } catch (err) {
                     console.error("Cart Error:", err);
@@ -1572,6 +1584,29 @@
             }
         });
     </script>
+
+    <!-- Cart Success Modal -->
+    <div class="auth-modal-overlay" id="cartSuccessModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;">
+        <div class="auth-modal" style="background: var(--bg-card); padding: 2rem; border-radius: 8px; max-width: 400px; width: 90%; text-align: center; border: 1px solid rgba(255,255,255,0.1); position: relative; transform: translateY(-20px); transition: transform 0.3s ease;">
+            <h2 id="cartModalTitle" style="font-family: var(--font-display); font-size: 1.5rem; text-transform: uppercase; margin-bottom: 0.5rem; color: var(--text-white);">Success</h2>
+            <p id="cartModalMessage" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Item added to cart successfully.</p>
+            <div class="auth-btns" style="display: flex; flex-direction: column; gap: 10px;">
+                <a href="/user/cart.html" class="btn" style="background: var(--accent); color: white; padding: 12px; border-radius: 4px; text-decoration: none; font-weight: 600; transition: opacity 0.3s ease;">View Cart</a>
+                <button class="btn-outline" id="closeCartModalBtn" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px; border-radius: 4px; cursor: pointer; transition: all 0.3s ease;">Continue Shopping</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        #cartSuccessModal.active {
+            opacity: 1 !important;
+            pointer-events: auto !important;
+        }
+        #cartSuccessModal.active .auth-modal {
+            transform: translateY(0) !important;
+        }
+    </style>
+
 </body>
 
 </html>

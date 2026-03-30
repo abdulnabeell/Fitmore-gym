@@ -6,51 +6,56 @@ const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
 const connectDB = require('./config/db');
 const path = require('path');
-const apiRoutes = require('./routes'); // Automatically loads index.js
+const apiRoutes = require('./routes');
 
-// Initialize Express App
 const app = express();
 
-// Connect to Database
+// ✅ Connect Database
 connectDB();
 
-// Global Security & Middlewares
-// Disable strict CSP because the frontend heavily relies on inline <script> templates and CDNs like unpkg/jsdelivr
-// Disable HSTS so local browsers don't force 'https://' upgrades leading to ERR_SSL_PROTOCOL_ERROR
+// ✅ Security Middlewares
 app.use(helmet({
   contentSecurityPolicy: false,
   hsts: false
 }));
+
 app.use(compression());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cookieParser());
 
-// CORS Configuration
+// ✅ FIXED CORS (IMPORTANT for EC2)
 app.use(cors({
-  origin: process.env.CLIENT_URL || "http://localhost:5000",
+  origin: "*",
   credentials: true
 }));
 
-// DDoS Protection
+// ✅ Rate Limiting
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 200,
-  message: { success: false, message: 'Too many API requests from this IP, please try again later.' },
+  message: {
+    success: false,
+    message: 'Too many requests, please try again later.'
+  },
   standardHeaders: true,
   legacyHeaders: false
 });
+
 app.use('/api', globalLimiter);
 
-// Core API Router
+// ✅ API Routes
 app.use('/api', apiRoutes);
 
-// Serve Static Frontend Store
+// ✅ Serve Frontend
 app.use(express.static(path.join(__dirname, '../public')));
 
+// ✅ Home Route
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/user/index.html'));
 });
 
+// ❌ DO NOT ADD app.listen HERE
+// This file should ONLY export app
 
 module.exports = app;
