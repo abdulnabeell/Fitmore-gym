@@ -709,33 +709,91 @@
            CANCEL ORDER
         =============================== */
 
-        function cancelOrder(orderId) {
+        let currentCancelOrderId = null;
+        const cancelModal = document.getElementById("cancelModal");
+
+        function openCancelModal(orderId) {
+            currentCancelOrderId = orderId;
+            const order = window.userOrders.find(o => o._id === orderId);
+            const container = document.getElementById("cancelModalBody");
+            
+            if (!order || !order.items) {
+                errorAlert("Order details not found!");
+                return;
+            }
+
+            const uncancelledItems = order.items.filter(item => !item.cancelled);
+
+            if (uncancelledItems.length === 0) {
+                errorAlert("No active items left to cancel!");
+                return;
+            }
+            
+            container.innerHTML = uncancelledItems.map(item => `
+                <div style="display: flex; align-items: center; margin-bottom: 10px; border: 1px solid #eee; padding: 8px; border-radius: 4px;">
+                    <input type="checkbox" id="cancelItem_${item._id}" value="${item._id}" class="cancel-item-cb" style="margin-right: 15px; width: 18px; height: 18px;">
+                    <img src="${item.image || 'images/fallback.png'}" style="width: 40px; height: 40px; object-fit: contain; margin-right: 10px; border-radius:4px; background:#f9f9f9;">
+                    <div style="flex: 1; min-width: 0;">
+                        <label for="cancelItem_${item._id}" style="font-size: 0.9rem; font-weight: 500; cursor: pointer; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color:#333">${item.name}</label>
+                        <div style="font-size: 0.8rem; color: #777;">Qty: ${item.qty} | $${item.price.toFixed(2)}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            cancelModal.classList.add("active");
+        }
+
+        function closeCancelModal() {
+            cancelModal.classList.remove("active");
+            currentCancelOrderId = null;
+        }
+
+        async function submitCancel() {
+            if (!currentCancelOrderId) return;
+            
+            const checkboxes = document.querySelectorAll('.cancel-item-cb');
+            const checkedItemIds = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
+
+            if (checkedItemIds.length === 0) {
+                errorAlert("Please select at least one item to cancel.");
+                return;
+            }
+
+            const order = window.userOrders.find(o => o._id === currentCancelOrderId);
+            const uncancelledItemsCount = order.items.filter(item => !item.cancelled).length;
+            const isFullCancel = checkedItemIds.length === uncancelledItemsCount;
+
             confirmAlert(
-                `Cancel Order #${orderId}?`,
+                isFullCancel ? `Cancel Entire Order #${currentCancelOrderId.slice(-6)}?` : `Cancel ${checkedItemIds.length} item(s) from order?`,
                 async () => {
                     try {
+                        const payload = isFullCancel ? {} : { itemIds: checkedItemIds };
+
                         const response = await fetch(
-                            `/api/orders/${orderId}/cancel`,
+                            `/api/orders/${currentCancelOrderId}/cancel`,
                             {
                                 method: "PUT",
                                 headers: {
                                     "Content-Type": "application/json",
                                     Authorization: `Bearer ${token}`
-                                }
+                                },
+                                body: JSON.stringify(payload)
                             }
                         );
 
                         const data = await response.json();
 
                         if (!response.ok) {
-                            throw new Error(data.message || "Failed to cancel order");
+                            throw new Error(data.message || "Failed to cancel");
                         }
 
-                        successAlert("Order Cancelled");
+                        successAlert(isFullCancel ? "Order Cancelled" : "Items Cancelled");
+                        closeCancelModal();
                         loadOrders();
                     } catch (err) {
                         console.error(err);
                         errorAlert(err.message || "Something went wrong");
+                        closeCancelModal();
                     }
                 }
             );
