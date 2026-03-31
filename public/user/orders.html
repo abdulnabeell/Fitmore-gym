@@ -598,146 +598,18 @@
                     }
 
                     const itemsHTML = order.items.map(item => `
-                <div class="order-items">
+                <div class="order-items" ${item.cancelled ? 'style="opacity: 0.5;"' : ''}>
                     <div class="item-thumb">
                         <img src="${item.image}">
                     </div>
                     <div class="item-details">
-                        <span class="item-name">${item.name}</span>
+                        <span class="item-name" ${item.cancelled ? 'style="text-decoration: line-through;"' : ''}>${item.name}</span>
                         <span class="item-meta">
-                            Qty: ${item.qty}
+                            Qty: ${item.qty} ${item.cancelled ? '<b style="color:#E50914; margin-left:10px;">(CANCELLED)</b>' : ''}
                         </span>
                     </div>
-                    <div style="font-weight:600;">
-                        $${item.price}
-                    </div>
-                </div>
-            `).join("");
-
-                    return `
-                <div class="order-card">
-                    <div class="order-header">
-                        <div>
-                            <div class="order-id">
-                                <a href="/user/order-details.html?id=${order._id}">
-                                    Order #${order._id.slice(-6)}
-                                </a>
-                            </div>
-                            <div class="order-date">
-                                ${new Date(order.createdAt).toDateString()}
-                            </div>
-                        </div>
-                        <span class="order-status ${statusClass}">
-                            ${formatStatus(order.status)}
-                        </span>
-                    </div>
-
-                    ${itemsHTML}
-
-                    <div class="order-footer">
-                        <div>
-                            <button class="btn-action btn-invoice"
-                                onclick="downloadInvoice(
-                                    '${order._id}',
-                                    '${order.items[0].name}',
-                                    '${order.total}',
-                                    '${order.items[0].qty}'
-                                )">
-                                Download Invoice
-                            </button>
-                            ${actionButtonHTML}
-                        </div>
-                        <div class="order-total">
-                            Total: $${order.total}
-                        </div>
-                    </div>
-                </div>
-            `;
-
-                }).join("");
-
-            } catch (err) {
-                console.error("Order Load Error:", err);
-            }
-        }
-
-        loadOrders();
-
-        /* ===============================
-           INVOICE GENERATION
-        =============================== */
-
-        function downloadInvoice(orderId, item, price, qty) {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.setFontSize(22);
-            doc.text("INVOICE", 105, 20, null, null, "center");
-            doc.setFontSize(12);
-            doc.text(`Order ID: #${orderId}`, 20, 40);
-            doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 50);
-            doc.line(20, 70, 190, 70);
-            doc.text("Item", 20, 80);
-            doc.text("Qty", 120, 80);
-            doc.text("Price", 160, 80);
-            doc.setFont("helvetica", "bold");
-            doc.text(item, 20, 90);
-            doc.setFont("helvetica", "normal");
-            doc.text(qty, 120, 90);
-            doc.text(`$${price}`, 160, 90);
-            const total = (parseFloat(price) * parseInt(qty)).toFixed(2);
-            doc.line(20, 100, 190, 100);
-            doc.setFont("helvetica", "bold");
-            doc.text(`Total: $${total}`, 140, 110);
-            doc.save(`Invoice_${orderId}.pdf`);
-        }
-
-        /* ===============================
-           CANCEL ORDER
-        =============================== */
-                const container =
-                    document.getElementById("ordersContainer");
-
-                if (!orders.length) {
-                    container.innerHTML =
-                        "<p>No orders found.</p>";
-                    return;
-                }
-
-                container.innerHTML = orders.map(order => {
-
-                    const formatStatus = (status) => status.replace(/_/g, ' ').replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-
-                    const statusClass =
-                        order.status === "DELIVERED"
-                            ? "status-delivered"
-                            : "status-processing";
-
-                    let actionButtonHTML = '';
-                    if (order.status === "PLACED" || order.status === "CONFIRMED") {
-                        actionButtonHTML = `<button class="btn-action btn-cancel" onclick="openCancelModal('${order._id}')">Cancel Order</button>`;
-                    } else if (order.status === "SHIPPED" || order.status === "OUT_FOR_DELIVERY") {
-                        actionButtonHTML = `<button class="btn-action" style="background:#FFA500;color:black" onclick="trackOrder('${order._id}')">Track Order</button>`;
-                    } else if (order.status === "DELIVERED") {
-                        actionButtonHTML = `<button class="btn-action btn-cancel" onclick="openReturnModal('${order._id}')">Return Order</button>`;
-                    } else if (order.status === "RETURN_REQUESTED") {
-                        actionButtonHTML = `<button class="btn-action btn-cancel" disabled style="opacity:0.5;cursor:not-allowed;">Return Requested</button>`;
-                    } else if (order.status === "RETURNED") {
-                        actionButtonHTML = `<button class="btn-action btn-cancel" disabled style="opacity:0.5;cursor:not-allowed;">Returned</button>`;
-                    }
-
-                    const itemsHTML = order.items.map(item => `
-                <div class="order-items">
-                    <div class="item-thumb">
-                        <img src="${item.image}">
-                    </div>
-                    <div class="item-details">
-                        <span class="item-name">${item.name}</span>
-                        <span class="item-meta">
-                            Qty: ${item.qty}
-                        </span>
-                    </div>
-                    <div style="font-weight:600;">
-                        $${item.price}
+                    <div style="font-weight:600; ${item.cancelled ? 'text-decoration: line-through;' : ''}">
+                        ${item.price.toFixed(2)}
                     </div>
                 </div>
             `).join("");
@@ -884,18 +756,18 @@
             const isFullCancel = checkedItemIds.length === uncancelledItemsCount;
 
             confirmAlert(
-                isFullCancel ? \`Cancel Entire Order #\${idToCancel.slice(-6)}?\` : \`Cancel \${checkedItemIds.length} item(s) from order?\`,
+                isFullCancel ? `Cancel Entire Order #${idToCancel.slice(-6)}?` : `Cancel ${checkedItemIds.length} item(s) from order?`,
                 async () => {
                     try {
                         const payload = isFullCancel ? {} : { itemIds: checkedItemIds };
 
                         const response = await fetch(
-                            \`/api/orders/\${idToCancel}/cancel\`,
+                            `/api/orders/${idToCancel}/cancel`,
                             {
                                 method: "PUT",
                                 headers: {
                                     "Content-Type": "application/json",
-                                    Authorization: \`Bearer \${token}\`
+                                    Authorization: `Bearer ${token}`
                                 },
                                 body: JSON.stringify(payload)
                             }
