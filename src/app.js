@@ -49,13 +49,14 @@ app.use('/api', apiRoutes);
 
 // ✅ Serve Frontend
 // ✅ Home Route FIRST
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/user/index.html'));
-});
+// ✅ Serve static FIRST
+app.use(express.static(path.join(__dirname, '../public'), {
+  index: "user/index.html"
+}));
 
-// ✅ THEN static
-app.use(express.static(path.join(__dirname, '../public')));
-// ❌ DO NOT ADD app.listen HERE
-// This file should ONLY export app
+// ✅ THEN define route
+// app.get('/', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../public/user/index.html'));
+// });
 
 module.exports = app;
