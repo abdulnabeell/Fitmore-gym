@@ -659,7 +659,7 @@
                     localStorage.setItem('isLoggedIn', 'true');
                     successAlert('Logged in successfully!');
                     setTimeout(() => {
-                        window.location.href="/user/index.html"; 
+                        window.location.href="/"; 
                     }, 1500);
                 } else {
                     errorAlert(data.message || 'Login failed. Please try again.');
