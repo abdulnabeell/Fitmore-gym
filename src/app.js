@@ -42,17 +42,16 @@ const globalLimiter = rateLimit({
   legacyHeaders: false
 });
 
-app.use('/api', globalLimiter);
-
-// ✅ API Routes
 app.use('/api', apiRoutes);
 
-// ✅ Serve Frontend
-// ✅ Home Route FIRST
-// ✅ Serve static FIRST
-app.use(express.static(path.join(__dirname, '../public'), {
-  index: "user/index.html"
-}));
+// ✅ Home route MUST be before express.static
+// ✅ Home route FIRST
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/user/index.html'));
+});
+
+// ✅ Static files
+app.use(express.static(path.join(__dirname, './public')));
 
 // ✅ THEN define route
 // app.get('/', (req, res) => {
