@@ -1805,14 +1805,19 @@ function checkAuth(e) {
     // Allow access to homepage without login
     const currentPath = window.location.pathname;
 
-    const publicPages = [
-        "/",
-        "/index.html",
-        "/user/index.html",
-        "/user/login.html",
-        "/user/signup.html"
-    ];
+    // const publicPages = [
+    //     "/",
+    //     "/index.html",
+    //     "/user/index.html",
+    //     "/user/login.html",
+    //     "/user/signup.html"
+    // ];
 
+    const publicPages = [
+    "/",
+    "/user/login.html",
+    "/user/signup.html"
+];
     if (!isLoggedIn && !publicPages.includes(currentPath)) {
         if (e) e.preventDefault();
         openAuthModal();
@@ -1935,12 +1940,25 @@ function checkAuth(e) {
         /* ===============================
            USER PROFILE TEST
         ================================*/
-        fetch('/api/user/profile', {
-            credentials: 'include'
-        })
-            .then(res => res.json())
-            .then(data => console.log("PROFILE:", data))
-            .catch(err => console.error(err));
+        // fetch('/api/user/profile', {
+        //     credentials: 'include'
+        // })
+        //     .then(res => res.json())
+        //     .then(data => console.log("PROFILE:", data))
+        //     .catch(err => console.error(err));
+
+        const token = localStorage.getItem('userToken');
+
+if (token) {
+    fetch('/api/user/profile', {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    .then(res => res.json())
+    .then(data => console.log("PROFILE:", data))
+    .catch(err => console.error(err));
+}
 
         /* ===============================
            LOAD PRODUCTS
