@@ -1815,8 +1815,10 @@ function checkAuth(e) {
 
     const publicPages = [
     "/",
+    "/index.html",
     "/user/login.html",
-    "/user/signup.html"
+    "/user/signup.html",
+    
 ];
     if (!isLoggedIn && !publicPages.includes(currentPath)) {
         if (e) e.preventDefault();
@@ -1873,7 +1875,7 @@ function checkAuth(e) {
         dropdownLogout?.addEventListener('click', () => {
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('userToken');
-            window.location.href="/user/index.html";
+            window.location.href="/";
         });
 
         /* ===============================
@@ -2352,6 +2354,10 @@ if (token) {
                 });
             }
         });
+
+        document.addEventListener("DOMContentLoaded", () => {
+    updateNavbarAuth();
+});
     </script>
 <script src="/user/js/cart-modal.js"></script>
 </body>
