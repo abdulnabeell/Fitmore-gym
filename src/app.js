@@ -54,9 +54,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/user/index.html'));
 });
-// app.get("/", (req, res) => {
-//     res.redirect("/user/login.html");
-// });
+
 // ❌ DO NOT ADD app.listen HERE
 // This file should ONLY export app
 

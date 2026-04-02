@@ -1785,16 +1785,42 @@
         /* ===============================
            AUTH CHECK
         ================================*/
-        function checkAuth(e) {
-            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        // function checkAuth(e) {
+        //     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
-            if (!isLoggedIn) {
-                e.preventDefault();
-                openAuthModal();
-                return false;
-            }
-            return true;
-        }
+        //     if (!isLoggedIn) {
+        //         e.preventDefault();
+        //         openAuthModal();
+        //         return false;
+        //     }
+        //     return true;
+        // }
+
+        /* ===============================
+   AUTH CHECK (FIXED VERSION)
+===============================*/
+function checkAuth(e) {
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+    // Allow access to homepage without login
+    const currentPath = window.location.pathname;
+
+    const publicPages = [
+        "/",
+        "/index.html",
+        "/user/index.html",
+        "/user/login.html",
+        "/user/signup.html"
+    ];
+
+    if (!isLoggedIn && !publicPages.includes(currentPath)) {
+        if (e) e.preventDefault();
+        openAuthModal();
+        return false;
+    }
+
+    return true;
+}
 
         /* ===============================
            NAVBAR AUTH UI
