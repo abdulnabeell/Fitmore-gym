@@ -48,13 +48,13 @@ app.use('/api', globalLimiter);
 app.use('/api', apiRoutes);
 
 // ✅ Serve Frontend
-app.use(express.static(path.join(__dirname, '../public')));
-
-// ✅ Home Route
+// ✅ Home Route FIRST
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/user/index.html'));
 });
 
+// ✅ THEN static
+app.use(express.static(path.join(__dirname, '../public')));
 // ❌ DO NOT ADD app.listen HERE
 // This file should ONLY export app
 
