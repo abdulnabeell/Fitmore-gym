@@ -44,20 +44,13 @@ const globalLimiter = rateLimit({
 
 app.use('/api', apiRoutes);
 
-// ✅ Static files
-app.use(express.static(path.join(__dirname, './public')));
-
 // ✅ Home route MUST be before express.static
 // ✅ Home route FIRST
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, './public/user/index.html'));
+  res.sendFile(path.join(__dirname, '../public/user/index.html'));
 });
 
-
-
-// ✅ THEN define route
-// app.get('/', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../public/user/index.html'));
-// });
+// ✅ Static files
+app.use(express.static(path.join(__dirname, '../public')));
 
 module.exports = app;
