@@ -6,13 +6,21 @@
 
     if (!res.ok) {
       console.warn("User not authenticated");
-      return; // ❌ REMOVE REDIRECT
+
+      // show login/signup
+      document.getElementById("signupLink")?.classList.remove("hidden");
+      return;
     }
 
-    console.log("User authenticated");
+    const data = await res.json();
+
+    console.log("User authenticated", data);
+
+    // hide signup, show user icon
+    document.getElementById("signupLink")?.classList.add("hidden");
+    document.getElementById("userIconBtn")?.classList.remove("hidden");
 
   } catch (err) {
     console.error(err);
-    // ❌ REMOVE REDIRECT
   }
 })();
